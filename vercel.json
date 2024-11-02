@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "api/auth/signup.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/send-otp",
+      "dest": "api/auth/signup.py"
+    }
+  ]
+}
