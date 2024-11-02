@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSEWRITE - Confirm Account</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --bg-gradient: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg-gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 400px;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.2);
+            text-align: center;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .logo-text-accent {
+            color: var(--accent);
+        }
+
+        .confirmation-text {
+            color: white;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        .otp-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 60px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .otp-input:focus {
+            background: rgba(255,255,255,0.2);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.2);
+        }
+
+        .verify-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--accent);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .verify-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .resend-text {
+            margin-top: 20px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .resend-link {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .timer {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            animation: fadeIn 0.6s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <span class="logo-text">MUSE</span>
+            <span class="logo-text-accent">WRITE</span>
+        </div>
+
+        <p class="confirmation-text">
+            We've sent a confirmation code to<br>
+            <strong id="userEmail">your@email.com</strong>
+        </p>
+
+        <div class="otp-container">
+            <input type="text" class="otp-input" maxlength="1" autofocus>
+            <input type="text" class="otp-input" maxlength="1">
+            <input type="text" class="otp-input" maxlength="1">
+            <input type="text" class="otp-input" maxlength="1">
+            <input type="text" class="otp-input" maxlength="1">
+            <input type="text" class="otp-input" maxlength="1">
+        </div>
+
+        <button class="verify-btn">Verify Account</button>
+
+        <p class="resend-text">
+            Didn't receive the code? 
+            <span class="timer">2:59</span><br>
+            <a class="resend-link" id="resendBtn">Resend Code</a>
+        </p>
+    </div>
+
+    <script>
+        // Auto-focus next input
+        const inputs = document.querySelectorAll('.otp-input');
+        
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+
+        // Timer functionality
+        let timeLeft = 179; // 2:59 in seconds
+        const timerDisplay = document.querySelector('.timer');
+        const resendBtn = document.getElementById('resendBtn');
+
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft === 0) {
+                resendBtn.style.opacity = '1';
+                resendBtn.style.pointerEvents = 'auto';
+                return;
+            }
+            
+            timeLeft--;
+            setTimeout(updateTimer, 1000);
+        }
+
+        updateTimer();
+
+        // Verify OTP
+        document.querySelector('.verify-btn').addEventListener('click', () => {
+            const otp = Array.from(inputs).map(input => input.value).join('');
+            if (otp.length === 6) {
+                verifyOTP(otp);
+            }
+        });
+
+        function verifyOTP(otp) {
+            // Add your OTP verification logic here
+            console.log('Verifying OTP:', otp);
+        }
+
+        // Resend OTP
+        resendBtn.addEventListener('click', () => {
+            timeLeft = 179;
+            resendBtn.style.opacity = '0.5';
+            resendBtn.style.pointerEvents = 'none';
+            updateTimer();
+            // Add your resend OTP logic here
+        });
+    </script>
+</body>
+</html>

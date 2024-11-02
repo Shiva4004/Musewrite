@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSEWRITE - Categories</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a2a6c;
+            --secondary: #b21f1f;
+            --accent: #fdbb2d;
+            --bg-gradient: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #0a0f1f;
+            color: #fff;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 15, 31, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .categories-header {
+            margin-top: 80px;
+            padding: 4rem 2rem;
+            text-align: center;
+            background: var(--bg-gradient);
+        }
+
+        .categories-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .category-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .category-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .category-card i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+            position: relative;
+            z-index: 2;
+        }
+
+        .category-card h3 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .category-card p {
+            color: rgba(255, 255, 255, 0.7);
+            position: relative;
+            z-index: 2;
+        }
+
+        .category-stats {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            position: relative;
+            z-index: 2;
+        }
+
+        .trending-categories {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .trending-categories h2 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .trending-slider {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 1rem;
+            scrollbar-width: none;
+        }
+
+        .trending-slider::-webkit-scrollbar {
+            display: none;
+        }
+
+        .trending-card {
+            min-width: 200px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .trending-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .footer-section a {
+            display: block;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #fff;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .category-card {
+            animation: fadeIn 0.6s ease backwards;
+        }
+
+        .category-card:nth-child(n) {
+            animation-delay: calc(n * 0.1s);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span>MUSE</span><span style="color: var(--accent)">WRITE</span>
+            </div>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/discover">Discover</a>
+                <a href="/write">Write</a>
+                <a href="/premium">Premium</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="categories-header">
+        <h1>Explore Categories</h1>
+        <p>Find your next favorite story genre</p>
+    </header>
+
+    <div class="categories-grid" id="categoriesGrid">
+        <!-- Categories will be dynamically loaded here -->
+    </div>
+
+    <section class="trending-categories">
+        <h2>Trending in Categories</h2>
+        <div class="trending-slider" id="trendingSlider">
+            <!-- Trending items will be dynamically loaded here -->
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>MUSEWRITE</h3>
+                <p>Where stories come alive</p>
+            </div>
+            <div class="footer-section">
+                <h3>Explore</h3>
+                <a href="/discover">Stories</a>
+                <a href="/categories">Categories</a>
+                <a href="/write">Write</a>
+            </div>
+            <div class="footer-section">
+                <h3>Community</h3>
+                <a href="/forum">Writers Forum</a>
+                <a href="/events">Events</a>
+                <a href="/workshops">Workshops</a>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <a href="/guidelines">Writing Guidelines</a>
+                <a href="/tips">Writing Tips</a>
+                <a href="/faq">FAQ</a>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js';
+        import { getFirestore, collection, getDocs, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBgCsFBQxndn6jqx6BWy0nMGrNy0A7tGXQ",
+            authDomain: "musewrite-71e8c.firebaseapp.com",
+            projectId: "musewrite-71e8c",
+            storageBucket: "musewrite-71e8c.appspot.com",
+            messagingSenderId: "497700060224",
+            appId: "1:497700060224:web:6d23b3dafaa68a954b73a5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const categories = [
+            { id: 'fantasy', name: 'Fantasy', icon: 'fa-dragon', stories: 25000, authors: 5000 },
+            { id: 'romance', name: 'Romance', icon: 'fa-heart', stories: 30000, authors: 6000 },
+            { id: 'mystery', name: 'Mystery', icon: 'fa-magnifying-glass', stories: 20000, authors: 4000 },
+            { id: 'scifi', name: 'Science Fiction', icon: 'fa-robot', stories: 15000, authors: 3000 },
+            { id: 'horror', name: 'Horror', icon: 'fa-ghost', stories: 10000, authors: 2000 },
+            { id: 'thriller', name: 'Thriller', icon: 'fa-mask', stories: 12000, authors: 2500 },
+            { id: 'historical', name: 'Historical', icon: 'fa-landmark', stories: 8000, authors: 1500 },
+            { id: 'poetry', name: 'Poetry', icon: 'fa-feather', stories: 40000, authors: 8000 }
+        ];
+
+        function displayCategories() {
+            const categoriesGrid = document.getElementById('categoriesGrid');
+            categoriesGrid.innerHTML = categories.map(category => `
+                <div class="category-card" data-category="${category.id}">
+                    <i class="fas ${category.icon}"></i>
+                    <h3>${category.name}</h3>
+                    <div class="category-stats">
+                        <span><i class="fas fa-book"></i> ${category.stories.toLocaleString()}</span>
+                        <span><i class="fas fa-users"></i> ${category.authors.toLocaleString()}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadTrendingStories() {
+            const trendingSlider = document.getElementById('trendingSlider');
+            try {
+                const q = query(collection(db, 'stories'), orderBy('views', 'desc'), limit(10));
+                const querySnapshot = await getDocs(q);
+                
+                const trendingHTML = [];
+                querySnapshot.forEach(doc => {
+                    const story = doc.data();
+                    trendingHTML.push(`
+                        <div class="trending-card">
+                            <img src="${story.coverImage}" alt="${story.title}">
+                            <h4>${story.title}</h4>
+                            <p>${story.genre}</p>
+                        </div>
+                    `);
+                });
+                
+                trendingSlider.innerHTML = trendingHTML.join('');
+            } catch (error) {
+                console.error('Error loading trending stories:', error);
+            }
+        }
+
+        // Initialize page
+        displayCategories();
+        loadTrendingStories();
+
+        // Category card click handler
+        document.getElementById('categoriesGrid').addEventListener('click', (e) => {
+            const card = e.target.closest('.category-card');
+            if (card) {
+                const categoryId = card.dataset.category;
+                window.location.href = `/discover?category=${categoryId}`;
+            }
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(10, 15, 31, 0.98)';
+            } else {
+                navbar.style.background = 'rgba(10, 15, 31, 0.95)';
+            }
+        });
+
+        // Trending slider scroll animation
+        const slider = document.getElementById('trendingSlider');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true;
+            slider.style.cursor = 'grabbing';
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+
+        slider.addEventListener('mouseleave', () => {
+            isDown = false;
+            slider.style.cursor = 'grab';
+        });
+
+        slider.addEventListener('mouseup', () => {
+            isDown = false;
+            slider.style.cursor = 'grab';
+        });
+
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 2;
+            slider.scrollLeft = scrollLeft - walk;
+        });
+
+        // Category hover effects
+        const categoryCards = document.querySelectorAll('.category-card');
+        categoryCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-10px)';
+                const icon = card.querySelector('i');
+                icon.style.transform = 'scale(1.2)';
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+                const icon = card.querySelector('i');
+                icon.style.transform = 'scale(1)';
+            });
+        });
+
+        // Load more categories on scroll
+        let page = 1;
+        const loadMoreCategories = async () => {
+            const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+            
+            if (scrollTop + clientHeight >= scrollHeight - 5) {
+                page++;
+                try {
+                    const response = await fetch(`/api/categories?page=${page}`);
+                    const newCategories = await response.json();
+                    
+                    if (newCategories.length > 0) {
+                        const categoriesGrid = document.getElementById('categoriesGrid');
+                        newCategories.forEach(category => {
+                            const categoryCard = document.createElement('div');
+                            categoryCard.className = 'category-card';
+                            categoryCard.innerHTML = `
+                                <i class="fas ${category.icon}"></i>
+                                <h3>${category.name}</h3>
+                                <div class="category-stats">
+                                    <span><i class="fas fa-book"></i> ${category.stories.toLocaleString()}</span>
+                                    <span><i class="fas fa-users"></i> ${category.authors.toLocaleString()}</span>
+                                </div>
+                            `;
+                            categoriesGrid.appendChild(categoryCard);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error loading more categories:', error);
+                }
+            }
+        };
+
+        window.addEventListener('scroll', loadMoreCategories);
+    </script>
+</body>
+</html>

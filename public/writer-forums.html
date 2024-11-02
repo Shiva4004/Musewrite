@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSEWRITE - Writers Forum</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a2a6c;
+            --secondary: #b21f1f;
+            --accent: #fdbb2d;
+            --bg-gradient: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #0a0f1f;
+            color: #fff;
+        }
+
+        .forum-container {
+            max-width: 1400px;
+            margin: 80px auto 0;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            height: calc(100vh - 100px);
+            position: sticky;
+            top: 100px;
+        }
+
+        .categories-list {
+            list-style: none;
+        }
+
+        .category-item {
+            padding: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .category-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .category-item.active {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .post-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .action-btn:hover {
+            color: var(--accent);
+        }
+
+        .trending-sidebar {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            height: calc(100vh - 100px);
+            position: sticky;
+            top: 100px;
+        }
+
+        .trending-topic {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .trending-topic:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .create-post {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            border-radius: 25px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .create-post:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(253, 187, 45, 0.3);
+        }
+
+        .post-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #0a0f1f;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 999;
+            display: none;
+        }
+
+        .post-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            color: #fff;
+            margin-bottom: 1rem;
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .tag-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            padding: 0.5rem;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .modal-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .publish-btn {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .cancel-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .post-card {
+            animation: fadeIn 0.6s ease backwards;
+        }
+
+        .post-card:nth-child(n) {
+            animation-delay: calc(n * 0.1s);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <!-- Navbar content from previous implementation -->
+    </nav>
+
+    <div class="forum-container">
+        <aside class="sidebar">
+            <button class="create-post">
+                <i class="fas fa-pen"></i> Create Post
+            </button>
+            <ul class="categories-list">
+                <li class="category-item active">
+                    <i class="fas fa-globe"></i> All Discussions
+                </li>
+                <li class="category-item">
+                    <i class="fas fa-book"></i> Writing Tips
+                </li>
+                <li class="category-item">
+                    <i class="fas fa-users"></i> Critique Partners
+                </li>
+                <li class="category-item">
+                    <i class="fas fa-lightbulb"></i> Writing Prompts
+                </li>
+                <li class="category-item">
+                    <i class="fas fa-graduation-cap"></i> Writing Resources
+                </li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <!-- Posts will be dynamically loaded here -->
+        </main>
+
+        <aside class="trending-sidebar">
+            <h3>Trending Topics</h3>
+            <!-- Trending topics will be dynamically loaded here -->
+        </aside>
+    </div>
+
+    <div class="modal-overlay"></div>
+    <div class="post-modal">
+        <h2>Create New Post</h2>
+        <textarea class="post-input" placeholder="Share your thoughts..."></textarea>
+        <input type="text" class="tag-input" placeholder="Add tags (comma separated)">
+        <div class="modal-actions">
+            <button class="modal-btn cancel-btn">Cancel</button>
+            <button class="modal-btn publish-btn">Publish</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js';
+        import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBgCsFBQxndn6jqx6BWy0nMGrNy0A7tGXQ",
+            authDomain: "musewrite-71e8c.firebaseapp.com",
+            projectId: "musewrite-71e8c",
+            storageBucket: "musewrite-71e8c.appspot.com",
+            messagingSenderId: "497700060224",
+            appId: "1:497700060224:web:6d23b3dafaa68a954b73a5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Load forum posts
+        const loadPosts = async () => {
+            const mainContent = document.querySelector('.main-content');
+            const q = query(collection(db, 'forum_posts'), orderBy('timestamp', 'desc'), limit(20));
+            
+            onSnapshot(q, (snapshot) => {
+                const posts = [];
+                snapshot.forEach((doc) => {
+                    posts.push({ id: doc.id, ...doc.data() });
+                });
+                
+                mainContent.innerHTML = posts.map(post => `
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-author">
+                                                                <img src="${post.authorAvatar}" alt="${post.authorName}" class="author-avatar">
+                                <div>
+                                    <h4>${post.authorName}</h4>
+                                    <small>${new Date(post.timestamp).toLocaleString()}</small>
+                                </div>
+                            </div>
+                            <div class="post-category">${post.category}</div>
+                        </div>
+                        <div class="post-content">
+                            <h3>${post.title}</h3>
+                            <p>${post.content}</p>
+                        </div>
+                        <div class="post-actions">
+                            <button class="action-btn like-btn" data-post-id="${post.id}">
+                                <i class="fas fa-heart"></i> ${post.likes || 0}
+                            </button>
+                            <button class="action-btn comment-btn" data-post-id="${post.id}">
+                                <i class="fas fa-comment"></i> ${post.comments?.length || 0}
+                            </button>
+                            <button class="action-btn share-btn" data-post-id="${post.id}">
+                                <i class="fas fa-share"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Add event listeners to action buttons
+                document.querySelectorAll('.like-btn').forEach(btn => {
+                    btn.addEventListener('click', handleLike);
+                });
+            });
+        };
+
+        // Load trending topics
+        const loadTrendingTopics = async () => {
+            const trendingSidebar = document.querySelector('.trending-sidebar');
+            const q = query(collection(db, 'trending_topics'), orderBy('popularity', 'desc'), limit(5));
+            
+            onSnapshot(q, (snapshot) => {
+                const topics = [];
+                snapshot.forEach((doc) => {
+                    topics.push({ id: doc.id, ...doc.data() });
+                });
+                
+                const topicsHTML = topics.map(topic => `
+                    <div class="trending-topic">
+                        <h4>#${topic.title}</h4>
+                        <small>${topic.posts} posts</small>
+                    </div>
+                `).join('');
+                
+                trendingSidebar.innerHTML = `
+                    <h3>Trending Topics</h3>
+                    ${topicsHTML}
+                `;
+            });
+        };
+
+        // Handle post creation
+        const createPostBtn = document.querySelector('.create-post');
+        const modal = document.querySelector('.post-modal');
+        const overlay = document.querySelector('.modal-overlay');
+        const cancelBtn = document.querySelector('.cancel-btn');
+        const publishBtn = document.querySelector('.publish-btn');
+
+        createPostBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+            overlay.style.display = 'block';
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+
+        publishBtn.addEventListener('click', async () => {
+            const content = document.querySelector('.post-input').value;
+            const tags = document.querySelector('.tag-input').value.split(',').map(tag => tag.trim());
+            
+            if (!content) return;
+
+            try {
+                await addDoc(collection(db, 'forum_posts'), {
+                    content,
+                    tags,
+                    authorId: auth.currentUser.uid,
+                    authorName: auth.currentUser.displayName,
+                    authorAvatar: auth.currentUser.photoURL,
+                    timestamp: Date.now(),
+                    likes: 0,
+                    comments: []
+                });
+
+                modal.style.display = 'none';
+                overlay.style.display = 'none';
+                document.querySelector('.post-input').value = '';
+                document.querySelector('.tag-input').value = '';
+            } catch (error) {
+                console.error('Error creating post:', error);
+            }
+        });
+
+        // Handle likes
+        async function handleLike(e) {
+            const postId = e.currentTarget.dataset.postId;
+            const userId = auth.currentUser?.uid;
+            
+            if (!userId) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            try {
+                // Toggle like in Firestore
+                const postRef = doc(db, 'forum_posts', postId);
+                const postDoc = await getDoc(postRef);
+                const likes = postDoc.data().likes || [];
+                
+                if (likes.includes(userId)) {
+                    await updateDoc(postRef, {
+                        likes: arrayRemove(userId)
+                    });
+                } else {
+                    await updateDoc(postRef, {
+                        likes: arrayUnion(userId)
+                    });
+                }
+            } catch (error) {
+                console.error('Error updating like:', error);
+            }
+        }
+
+        // Initialize page
+        loadPosts();
+        loadTrendingTopics();
+
+        // Category selection
+        document.querySelectorAll('.category-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                document.querySelector('.category-item.active').classList.remove('active');
+                e.currentTarget.classList.add('active');
+                // Reload posts with selected category
+                loadPosts(e.currentTarget.textContent.trim());
+            });
+        });
+    </script>
+</body>
+</html>
+

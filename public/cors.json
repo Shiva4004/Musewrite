@@ -1,0 +1,14 @@
+[
+    {
+      "origin": ["https://musewrite.in"],
+      "method": ["GET", "POST", "PUT", "DELETE"],
+      "maxAgeSeconds": 3600,
+      "responseHeader": ["Content-Type", "Authorization"]
+    },
+    {
+      "origin": ["*"],
+      "method": ["GET"],
+      "maxAgeSeconds": 3600
+    }
+  ]
+  

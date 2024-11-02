@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSEWRITE Studio</title>
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a2a6c;
+            --accent: #fdbb2d;
+            --bg-gradient: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .writing-header {
+            padding: 1rem 2rem;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .story-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .editor-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        #editor {
+            height: calc(100vh - 200px);
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .ql-toolbar {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            background: #f8f9fa;
+        }
+
+        .word-count {
+            text-align: right;
+            color: #666;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="writing-header">
+        <div class="story-title" contenteditable="true">Untitled Story</div>
+        <div class="header-actions">
+            <button class="btn" id="saveBtn">Save Draft</button>
+            <button class="btn btn-primary" id="publishBtn">Publish</button>
+        </div>
+    </div>
+
+    <div class="editor-container">
+        <div id="editor"></div>
+        <div class="word-count">0 words</div>
+    </div>
+
+    <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+    <script>
+        const quill = new Quill('#editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline'],
+                    ['blockquote'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['link', 'image', 'video'],
+                    ['clean']
+                ]
+            },
+            placeholder: 'Start writing your story...'
+        });
+
+        function updateWordCount() {
+            const text = quill.getText().trim();
+            const wordCount = text ? text.split(/\s+/).length : 0;
+            document.querySelector('.word-count').textContent = `${wordCount} words`;
+        }
+
+        quill.on('text-change', updateWordCount);
+
+        document.getElementById('saveBtn').addEventListener('click', () => {
+            const content = quill.getContents();
+            localStorage.setItem('draft', JSON.stringify(content));
+            alert('Draft saved successfully!');
+        });
+
+        const savedContent = localStorage.getItem('draft');
+        if (savedContent) {
+            quill.setContents(JSON.parse(savedContent));
+            updateWordCount();
+        }
+    </script>
+</body>
+</html>

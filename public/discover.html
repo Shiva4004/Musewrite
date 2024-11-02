@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSEWRITE - Discover Stories</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a2a6c;
+            --secondary: #b21f1f;
+            --accent: #fdbb2d;
+            --bg-gradient: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #0a0f1f;
+            color: #fff;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 15, 31, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .discover-header {
+            margin-top: 80px;
+            padding: 4rem 2rem;
+            text-align: center;
+            background: var(--bg-gradient);
+        }
+
+        .discover-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            padding: 0 2rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .story-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .story-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .story-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .story-content {
+            padding: 1.5rem;
+        }
+
+        .story-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .story-author {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1rem;
+        }
+
+        .story-stats {
+            display: flex;
+            gap: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        footer {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .footer-section a {
+            display: block;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #fff;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span>MUSE</span><span style="color: var(--accent)">WRITE</span>
+            </div>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/discover">Discover</a>
+                <a href="/write">Write</a>
+                <a href="/premium">Premium</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="discover-header">
+        <h1>Discover Stories</h1>
+        <p>Explore worlds of imagination crafted by our community</p>
+    </header>
+
+    <div class="filters">
+        <button class="filter-btn active" data-genre="all">All</button>
+        <button class="filter-btn" data-genre="fantasy">Fantasy</button>
+        <button class="filter-btn" data-genre="romance">Romance</button>
+        <button class="filter-btn" data-genre="mystery">Mystery</button>
+        <button class="filter-btn" data-genre="scifi">Sci-Fi</button>
+    </div>
+
+    <div class="stories-grid" id="storiesGrid">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>MUSEWRITE</h3>
+                <p>Where stories come alive</p>
+            </div>
+            <div class="footer-section">
+                <h3>Explore</h3>
+                <a href="/discover">Stories</a>
+                <a href="/categories">Categories</a>
+                <a href="/write">Write</a>
+            </div>
+            <div class="footer-section">
+                <h3>Community</h3>
+                <a href="/forum">Writers Forum</a>
+                <a href="/events">Events</a>
+                <a href="/workshops">Workshops</a>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <a href="/guidelines">Writing Guidelines</a>
+                <a href="/tips">Writing Tips</a>
+                <a href="/faq">FAQ</a>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js';
+        import { getFirestore, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBgCsFBQxndn6jqx6BWy0nMGrNy0A7tGXQ",
+            authDomain: "musewrite-71e8c.firebaseapp.com",
+            projectId: "musewrite-71e8c",
+            storageBucket: "musewrite-71e8c.appspot.com",
+            messagingSenderId: "497700060224",
+            appId: "1:497700060224:web:6d23b3dafaa68a954b73a5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadStories(genre = 'all') {
+            const storiesGrid = document.getElementById('storiesGrid');
+            storiesGrid.innerHTML = '<div class="loading-spinner"></div>';
+
+            try {
+                let q = collection(db, 'stories');
+                if (genre !== 'all') {
+                    q = query(q, where('genre', '==', genre));
+                }
+
+                const querySnapshot = await getDocs(q);
+                const stories = [];
+
+                querySnapshot.forEach((doc) => {
+                    stories.push({ id: doc.id, ...doc.data() });
+                });
+
+                displayStories(stories);
+            } catch (error) {
+                console.error('Error loading stories:', error);
+                storiesGrid.innerHTML = '<p>Error loading stories. Please try again later.</p>';
+            }
+        }
+
+        function displayStories(stories) {
+            const storiesGrid = document.getElementById('storiesGrid');
+            storiesGrid.innerHTML = stories.map(story => `
+                <div class="story-card">
+                    <img src="${story.coverImage}" alt="${story.title}" class="story-image">
+                    <div class="story-content">
+                        <h3 class="story-title">${story.title}</h3>
+                        <p class="story-author">By ${story.author}</p>
+                        <div class="story-stats">
+                            <span><i class="fas fa-heart"></i> ${story.likes}</span>
+                            <span><i class="fas fa-eye"></i> ${story.views}</span>
+                            <span><i class="fas fa-comment"></i> ${story.comments}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelector('.filter-btn.active').classList.remove('active');
+                button.classList.add('active');
+                loadStories(button.dataset.genre);
+            });
+        });
+
+// Initial load
+loadStories();
+
+// Navbar scroll effect
+window.addEventListener('scroll', () => {
+    const navbar = document.querySelector('.navbar');
+    if (window.scrollY > 50) {
+        navbar.style.background = 'rgba(10, 15, 31, 0.98)';
+    } else {
+        navbar.style.background = 'rgba(10, 15, 31, 0.95)';
+    }
+});
+
+// Story card hover animations
+document.addEventListener('mouseover', (e) => {
+    const card = e.target.closest('.story-card');
+    if (card) {
+        const stats = card.querySelector('.story-stats');
+        stats.style.color = 'var(--accent)';
+    }
+});
+
+document.addEventListener('mouseout', (e) => {
+    const card = e.target.closest('.story-card');
+    if (card) {
+        const stats = card.querySelector('.story-stats');
+        stats.style.color = 'rgba(255, 255, 255, 0.7)';
+    }
+});
+
+// Infinite scroll implementation
+let isLoading = false;
+let lastVisible = null;
+
+window.addEventListener('scroll', () => {
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    
+    if (scrollTop + clientHeight >= scrollHeight - 5 && !isLoading) {
+        loadMoreStories();
+    }
+});
+
+async function loadMoreStories() {
+    if (!lastVisible) return;
+    
+    isLoading = true;
+    const storiesGrid = document.getElementById('storiesGrid');
+    const loadingSpinner = document.createElement('div');
+    loadingSpinner.className = 'loading-spinner';
+    storiesGrid.appendChild(loadingSpinner);
+
+    try {
+        const genre = document.querySelector('.filter-btn.active').dataset.genre;
+        const q = query(
+            collection(db, 'stories'),
+            genre !== 'all' ? where('genre', '==', genre) : null,
+            startAfter(lastVisible),
+            limit(10)
+        );
+
+        const querySnapshot = await getDocs(q);
+        const stories = [];
+        querySnapshot.forEach((doc) => {
+            stories.push({ id: doc.id, ...doc.data() });
+        });
+
+        lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+        
+        const newStories = stories.map(story => `
+            <div class="story-card">
+                <img src="${story.coverImage}" alt="${story.title}" class="story-image">
+                <div class="story-content">
+                    <h3 class="story-title">${story.title}</h3>
+                    <p class="story-author">By ${story.author}</p>
+                    <div class="story-stats">
+                        <span><i class="fas fa-heart"></i> ${story.likes}</span>
+                        <span><i class="fas fa-eye"></i> ${story.views}</span>
+                        <span><i class="fas fa-comment"></i> ${story.comments}</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        loadingSpinner.remove();
+        storiesGrid.insertAdjacentHTML('beforeend', newStories);
+    } catch (error) {
+        console.error('Error loading more stories:', error);
+    } finally {
+        isLoading = false;
+    }
+}
+</script>
+</body>
+</html>
