@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSEWRITE Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root[data-theme="light"] {
+            --primary: #828df7;
+            --primary-light: #b3c7f7;
+            --secondary: #faaf90;
+            --secondary-light: #f8b8d0;
+            --accent: #9381f8;
+            --bg-primary: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+            --bg-secondary: #d591c6;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --card-bg: rgba(255, 255, 255, 0.2);
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+            --gradient-accent: linear-gradient(135deg, var(--primary-light), var(--accent));
+        }
+
+        :root[data-theme="dark"] {
+            --primary: #8b95f6;
+            --primary-light: #b3c7f7;
+            --secondary: #faaf90;
+            --secondary-light: #f8b8d0;
+            --accent: #9b8bf4;
+            --bg-primary: #0a0f1f;
+            --bg-secondary: #141b2d;
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+            --gradient-accent: linear-gradient(135deg, var(--primary-light), var(--accent));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .header-main {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: var(--bg-primary);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-text {
+            color: var(--text-primary);
+        }
+
+        .logo-text-accent {
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .auth-btn {
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--text-primary);
+        }
+
+        .signup-btn {
+            background: var(--gradient-accent);
+            border: none;
+            color: var(--bg-primary);
+            margin-left: 10px;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .premium-hero {
+            text-align: center;
+            padding: 8rem 2rem 6rem;
+            background: var(--gradient-primary);
+        }
+
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-container {
+            max-width: 1200px;
+            margin: -100px auto 0;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pricing-card {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .pricing-card.featured {
+            background: var(--gradient-accent);
+            position: relative;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 1.5rem 0;
+        }
+
+        .price span {
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        .features {
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-item i {
+            color: var(--accent);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-accent);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--text-primary);
+        }
+
+        .benefits-section {
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .benefits-grid {
+            max-width: 1200px;
+            margin: 4rem auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .benefit-card {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .benefit-card i {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer {
+            background: var(--bg-secondary);
+            padding: 4rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .footer-section a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-bottom: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px 0;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .pricing-container {
+                margin-top: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header-main">
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="/discover.html">Discover</a>
+                <a href="/genres.html">Genres</a>
+                <a href="/premium.html">Premium</a>
+            </div>
+
+            <div class="brand-logo">
+                <span class="logo-text">MUSE</span>
+                <span class="logo-text-accent">WRITE</span>
+            </div>
+
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="auth-btn login-btn" onclick="window.location.href='/login.html'">Log In</button>
+                <button class="auth-btn signup-btn" onclick="window.location.href='/signup.html'">Sign Up</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="premium-hero">
+        <div class="hero-content">
+            <h1>Unlock Your Full Creative Potential</h1>
+            <p>Join MUSEWRITE Premium and elevate your writing journey</p>
+        </div>
+    </div>
+
+    <div class="pricing-container">
+        <div class="pricing-card">
+            <h2>Basic</h2>
+            <div class="price">Free<span>/forever</span></div>
+            <div class="features">
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>Basic writing tools</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>3 stories per month</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>Community access</span>
+                </div>
+            </div>
+            <button class="btn btn-secondary">Current Plan</button>
+        </div>
+
+        <div class="pricing-card featured">
+            <div class="featured-badge">Most Popular</div>
+            <h2>Premium</h2>
+            <div class="price">$9.99<span>/month</span></div>
+            <div class="features">
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>Advanced writing tools</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>Unlimited stories</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>AI writing assistant</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>Priority support</span>
+                </div>
+            </div>
+            <button class="btn btn-primary" id="upgradePremium">Upgrade Now</button>
+        </div>
+
+        <div class="pricing-card">
+            <h2>Pro</h2>
+            <div class="price">$19.99<span>/month</span></div>
+            <div class="features">
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>All Premium features</span>
+                </div>
+                <div class
+                <i class="fas fa-check"></i>
+                <span>Professional analytics</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-check"></i>
+                <span>Publishing assistance</span>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-check"></i>
+                <span>Monetization tools</span>
+            </div>
+        </div>
+        <button class="btn btn-secondary" id="upgradePro">Go Pro</button>
+    </div>
+</div>
+
+<div class="benefits-section">
+    <h2>Premium Benefits</h2>
+    <div class="benefits-grid">
+        <div class="benefit-card">
+            <i class="fas fa-robot"></i>
+            <h3>AI Writing Assistant</h3>
+            <p>Get intelligent suggestions and overcome writer's block</p>
+        </div>
+        <div class="benefit-card">
+            <i class="fas fa-chart-line"></i>
+            <h3>Advanced Analytics</h3>
+            <p>Track your story's performance and reader engagement</p>
+        </div>
+        <div class="benefit-card">
+            <i class="fas fa-users"></i>
+            <h3>Premium Community</h3>
+            <p>Connect with other premium writers and get feedback</p>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Explore</h3>
+                <a href="#trending">Trending Stories</a>
+                <a href="#featured">Featured Writers</a>
+                <a href="#categories">Categories</a>
+            </div>
+
+            <div class="footer-section">
+                <h3>Community</h3>
+                <a href="#forums">Writers Forum</a>
+                <a href="#events">Events</a>
+                <a href="#workshops">Workshops</a>
+            </div>
+
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <a href="#guidelines">Writing Guidelines</a>
+                <a href="#tips">Writing Tips</a>
+                <a href="#faq">FAQ</a>
+            </div>
+
+            <div class="footer-section">
+                <h3>Company</h3>
+                <a href="#about">About Us</a>
+                <a href="#careers">Careers</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 MUSEWRITE. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getFirestore, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBgCsFBQxndn6jqx6BWy0nMGrNy0A7tGXQ",
+        authDomain: "musewrite-71e8c.firebaseapp.com",
+        projectId: "musewrite-71e8c",
+        storageBucket: "musewrite-71e8c.appspot.com",
+        messagingSenderId: "497700060224",
+        appId: "1:497700060224:web:6d23b3dafaa68a954b73a5"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const db = getFirestore();
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const themeToggle = document.getElementById('themeToggle');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            const icon = themeToggle.querySelector('i');
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+    
+        const savedTheme = localStorage.getItem('theme') || (prefersDarkScheme.matches ? 'dark' : 'light');
+        setTheme(savedTheme);
+    
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+    
+        prefersDarkScheme.addEventListener('change', (e) => {
+            const newTheme = e.matches ? 'dark' : 'light';
+            setTheme(newTheme);
+        });
+    });
+
+    document.getElementById('upgradePremium').addEventListener('click', async () => {
+        if (!auth.currentUser) {
+            window.location.href = '/login.html';
+            return;
+        }
+        
+        try {
+            await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+                premiumStatus: 'premium',
+                premiumStartDate: new Date()
+            });
+            
+            alert('Successfully upgraded to Premium!');
+        } catch (error) {
+            console.error('Error upgrading:', error);
+            alert('Failed to upgrade. Please try again.');
+        }
+    });
+
+    document.getElementById('upgradePro').addEventListener('click', async () => {
+        if (!auth.currentUser) {
+            window.location.href = '/login.html';
+            return;
+        }
+        
+        try {
+            await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+                premiumStatus: 'pro',
+                premiumStartDate: new Date()
+            });
+            
+            alert('Successfully upgraded to Pro!');
+        } catch (error) {
+            console.error('Error upgrading:', error);
+            alert('Failed to upgrade. Please try again.');
+        }
+    });
+</script>
+</body>
+</html>
