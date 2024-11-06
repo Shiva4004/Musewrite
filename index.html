@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSEWRITE - Where Stories Come Alive</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+/* Base Styles and Variables */
+:root[data-theme="light"] {
+    --primary: #828df7;
+    --primary-light: #71a8d8;
+    --secondary: #faaf90;
+    --secondary-light: #9b4e6a;
+    --accent: #4e3eab;
+    --bg-primary: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+    --bg-secondary: #d591c6;
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --card-bg: rgba(255, 255, 255, 0.2);
+    --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+    --gradient-accent: linear-gradient(135deg, var(--primary-light), var(--accent));
+}
+
+:root[data-theme="dark"] {
+    --primary: #030321;
+    --primary-light: #1ae3dc;
+    --secondary: #000000;
+    --secondary-light: #3b2d8e;
+    --accent: #14e0e0;
+    --bg-primary: #0a0f1f;
+    --bg-secondary: #141b2d;
+    --text-primary: rgba(255, 255, 255, 0.95);
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+    --gradient-accent: linear-gradient(135deg, var(--primary-light), var(--accent));
+}
+
+    
+
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Header Styles */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: var(--bg-primary);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-links a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+/* Hero Section */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 2rem;
+    background: var(--gradient-primary);
+}
+
+.hero-content {
+    max-width: 800px;
+}
+
+.hero h1 {
+    font-size: 4.5rem;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.hero-text-gradient {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+/* Featured Stories Section */
+.featured-stories {
+    padding: 6rem 2rem;
+    background: var(--bg-primary);
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    font-family: 'Playfair Display', serif;
+}
+
+.story-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.story-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.story-image {
+    position: relative;
+    height: 200px;
+}
+
+.story-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.story-content {
+    padding: 1.5rem;
+}
+
+/* Categories Section */
+.categories {
+    padding: 6rem 2rem;
+    background: var(--bg-secondary);
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.category-card {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+/* CTA Section */
+.cta-section {
+    padding: 6rem 2rem;
+    background: var(--gradient-primary);
+    text-align: center;
+    color: rgb(42, 56, 57);
+}
+
+/* Footer */
+.footer {
+    background: var(--bg-secondary);
+    padding: 4rem 2rem;
+}
+
+.footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 3rem;
+}
+
+.footer-section h3 {
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 1.5rem;
+    color: var(--primary);
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-links a {
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 3rem;
+    }
+    
+    .nav-links {
+        display: none;
+    }
+    
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Interactive Elements */
+.btn {
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.btn-primary {
+    background: var(--gradient-accent);
+    color: 14e0e0   ;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--text-primary);
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background: var(--bg-secondary);
+}
+
+        .primary-btn {
+            background: var(--gradient-accent);
+            color: var(--bg-primary);
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(155, 139, 244, 0.3);
+        }
+
+        .hero {
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: var(--gradient-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+       /* .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('path-to-texture.png');
+            opacity: 0.1;
+        }*/
+
+        .hero-content {
+            max-width: 800px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            line-height: 1.2;
+            margin-bottom: 30px;
+        }
+
+        .hero-gradient-text {
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        .featured-stories {
+            padding: 100px 0;
+            background: var(--bg-primary);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 60px;
+            color: var(--text-primary);
+        }
+
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 0 40px;
+        }
+
+        .story-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .story-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .story-image {
+            height: 200px;
+            position: relative;
+        }
+
+        .story-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .story-content {
+            padding: 25px;
+        }
+
+        .story-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .story-author {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .story-stats {
+            display: flex;
+            gap: 20px;
+            color: var(--text-secondary);
+        }
+
+        .footer {
+            background: var(--bg-secondary);
+            padding: 80px 0 0;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-brand {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .footer-sections {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+
+        .footer-section h3 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 25px;
+            color: var(--accent);
+        }
+
+        .footer-section a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-bottom: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px 0;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-sections {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-main">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="brand-logo">
+                    <span class="logo-text">MUSE</span>
+                    <span class="logo-text-accent">WRITE</span>
+                </div>
+                <nav class="nav-links">
+                    <a href="/discover.html">Discover</a>
+                    <a href="/writers.html">Writers</a>
+                    <a href="/premium.html">Premium</a>
+                </nav>
+            </div>
+    
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="write-btn" onclick="window.location.href='/write.html'">
+                    <i class="fas fa-pen"></i> Write
+                </button>
+                <div class="profile-dropdown">
+                    <button class="profile-btn" id="profileBtn">
+                        <img src="" alt="Profile" id="profileImg" class="profile-img">
+                    </button>
+                    <div class="dropdown-menu" id="profileMenu">
+                        <a href="/dashboard.html"><i class="fas fa-columns"></i> Dashboard</a>
+                        <a href="/my-stories.html"><i class="fas fa-book"></i> My Stories</a>
+                        <a href="/settings.html"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <style>
+    .header-main {
+        background: var(--bg-secondary);
+        padding: 1rem 2rem;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .nav-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .nav-left {
+        display: flex;
+        align-items: center;
+        gap: 3rem;
+    }
+    
+    .nav-links {
+        display: flex;
+        gap: 2rem;
+    }
+    
+    .nav-links a {
+        color: var(--text-primary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+    
+    .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+    
+    .write-btn {
+        background: var(--gradient-accent);
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .write-btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .profile-dropdown {
+        position: relative;
+    }
+    
+    .profile-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+    }
+    
+    .profile-img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--accent);
+    }
+    
+    .dropdown-menu {
+        position: absolute;
+        top: 120%;
+        right: 0;
+        background: var(--bg-secondary);
+        border-radius: 10px;
+        padding: 0.5rem;
+        min-width: 200px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        display: none;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .dropdown-menu.active {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    .dropdown-menu a {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 0.8rem 1rem;
+        color: var(--text-primary);
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        border-radius: 5px;
+    }
+    
+    .dropdown-menu a:hover {
+        background: var(--card-bg);
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    </style>
+    
+    <script>
+    document.getElementById('profileBtn').addEventListener('click', () => {
+        document.getElementById('profileMenu').classList.toggle('active');
+    });
+    
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.profile-dropdown')) {
+            document.getElementById('profileMenu').classList.remove('active');
+        }
+    });
+    
+    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+            await auth.signOut();
+            window.location.href = '/';
+        } catch (error) {
+            console.error('Error signing out:', error);
+        }
+    });
+    
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            document.getElementById('profileImg').src = user.photoURL || 'https://via.placeholder.com/40';
+        }
+    });
+    </script>
+    
+    
+    <style>
+        .auth-btn {
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+    
+        .login-btn {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--text-primary);
+        }
+    
+        .login-btn:hover {
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+    
+        .signup-btn {
+            background: var(--gradient-accent);
+            border: none;
+            color: var(--bg-primary);
+            margin-left: 10px;
+        }
+    
+        .signup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(155, 139, 244, 0.3);
+        }
+    
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+    </style>
+    
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>
+                Where Stories<br>
+                <span class="hero-gradient-text">
+                    <span style="color: #00f7ff; font-weight: 900; letter-spacing: 1px;">Come</span> Alive
+                </span>
+            </h1>
+            <p>Join our community of visionary writers and passionate readers.</p>
+            <button class="primary-btn" onclick="window.location.href='/signup.html'">Begin Your Journey</button>
+        </div>
+    </section>
+    
+
+    <section class="featured-stories">
+        <div class="container">
+            <h2 class="section-title">Featured Masterpieces</h2>
+            <div class="story-grid" id="storyGrid"></div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="brand-logo">
+                        <span class="logo-text">MUSE</span>
+                        <span class="logo-text-accent">WRITE</span>
+                    </div>
+                    <p>Where literary excellence meets innovation</p>
+                </div>
+
+                <div class="footer-sections">
+                    <div class="footer-section">
+                        <h3>Explore</h3>
+                        <a href="#trending">Trending Stories</a>
+                        <a href="#featured">Featured Writers</a>
+                        <a href="#categories">Categories</a>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3>Community</h3>
+                        <a href="#forums">Writers Forum</a>
+                        <a href="#events">Events</a>
+                        <a href="#workshops">Workshops</a>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3>Resources</h3>
+                        <a href="#guidelines">Writing Guidelines</a>
+                        <a href="#tips">Writing Tips</a>
+                        <a href="#faq">FAQ</a>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3>Company</h3>
+                        <a href="#about">About Us</a>
+                        <a href="#careers">Careers</a>
+                        <a href="#contact">Contact</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 MUSEWRITE. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getFirestore, collection, query, where, orderBy, limit, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBgCsFBQxndn6jqx6BWy0nMGrNy0A7tGXQ",
+        authDomain: "musewrite-71e8c.firebaseapp.com",
+        projectId: "musewrite-71e8c",
+        storageBucket: "musewrite-71e8c.appspot.com",
+        messagingSenderId: "497700060224",
+        appId: "1:497700060224:web:6d23b3dafaa68a954b73a5"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    let currentUser = null;
+
+    onAuthStateChanged(auth, (user) => {
+        currentUser = user;
+        updateAuthUI();
+    });
+
+    function updateAuthUI() {
+        const authButtons = document.querySelector('.nav-actions');
+        if (currentUser) {
+            authButtons.innerHTML = `
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="auth-btn" onclick="window.location.href='/dashboard.html'">Dashboard</button>
+                <button class="auth-btn" id="logoutBtn">Log Out</button>
+            `;
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                auth.signOut();
+                window.location.href = '/';
+            });
+        } else {
+            authButtons.innerHTML = `
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="auth-btn login-btn" onclick="window.location.href='/login.html'">Log In</button>
+                <button class="auth-btn signup-btn" onclick="window.location.href='/signup.html'">Sign Up</button>
+            `;
+        }
+        initializeThemeToggle();
+    }
+
+    async function loadFeaturedStories() {
+        const storyGrid = document.getElementById('storyGrid');
+        const storiesQuery = query(
+            collection(db, 'stories'),
+            where('status', '==', 'published'),
+            orderBy('reads', 'desc'),
+            limit(6)
+        );
+
+        try {
+            const snapshot = await getDocs(storiesQuery);
+            storyGrid.innerHTML = '';
+            
+            if (snapshot.empty) {
+                storyGrid.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No stories yet</h3>
+                        <p>Be the first to publish a story!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            snapshot.forEach(doc => {
+                const story = doc.data();
+                storyGrid.innerHTML += `
+                    <div class="story-card" onclick="window.location.href='/read.html?id=${doc.id}'">
+                        <div class="story-image">
+                            <img src="${story.coverImage || 'https://source.unsplash.com/random/600x400?writing'}" alt="${story.title}">
+                        </div>
+                        <div class="story-content">
+                            <h3 class="story-title">${story.title}</h3>
+                            <p class="story-author">By ${story.authorName}</p>
+                            <div class="story-stats">
+                                <span><i class="fas fa-heart"></i> ${formatNumber(story.likes || 0)}</span>
+                                <span><i class="fas fa-eye"></i> ${formatNumber(story.reads || 0)}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        } catch (error) {
+            console.error('Error loading stories:', error);
+            storyGrid.innerHTML = `
+                <div class="error-state">
+                    <h3>Something went wrong</h3>
+                    <p>Please try again later</p>
+                </div>
+            `;
+        }
+    }
+
+    function formatNumber(num) {
+        if (num >= 1000000) {
+            return (num / 1000000).toFixed(1) + 'M';
+        }
+        if (num >= 1000) {
+            return (num / 1000).toFixed(1) + 'K';
+        }
+        return num;
+    }
+
+    function initializeThemeToggle() {
+        const themeToggle = document.getElementById('themeToggle');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            const icon = themeToggle.querySelector('i');
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        const savedTheme = localStorage.getItem('theme') || (prefersDarkScheme.matches ? 'dark' : 'light');
+        setTheme(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        prefersDarkScheme.addEventListener('change', (e) => {
+            const newTheme = e.matches ? 'dark' : 'light';
+            setTheme(newTheme);
+        });
+    }
+
+    document.querySelector('.primary-btn').addEventListener('click', () => {
+        if (currentUser) {
+            window.location.href = '/write.html';
+        } else {
+            window.location.href = '/signup.html';
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadFeaturedStories();
+        updateAuthUI();
+    });
+</script>
+
+        
+</body>
+</html>

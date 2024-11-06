@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSEWRITE - Frequently Asked Questions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root[data-theme="dark"] {
+            --primary: #8b95f6;
+            --primary-light: #b3c7f7;
+            --secondary: #faaf90;
+            --secondary-light: #f8b8d0;
+            --accent: #9b8bf4;
+            --bg-primary: #0a0f1f;
+            --bg-secondary: #141b2d;
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+            --gradient-accent: linear-gradient(135deg, var(--primary-light), var(--accent));
+        }
+
+        :root[data-theme="light"] {
+            --primary: #828df7;
+            --primary-light: #b3c7f7;
+            --secondary: #faaf90;
+            --secondary-light: #f8b8d0;
+            --accent: #9381f8;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --card-bg: rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-text-accent {
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .faq-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .faq-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+
+        .faq-description {
+            color: var(--text-secondary);
+        }
+
+        .faq-categories {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn.active {
+            background: var(--gradient-accent);
+            color: white;
+        }
+
+        .faq-item {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            height: auto;
+            padding: 20px;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 45px;
+            border: none;
+            border-radius: 10px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .faq-container {
+                padding: 0 15px;
+            }
+            .faq-title {
+                font-size: 2rem;
+            }
+            .category-btn {
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <div class="brand-logo">
+                <span class="logo-text">MUSE</span>
+                <span class="logo-text-accent">WRITE</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="faq-container">
+        <div class="faq-header">
+            <h1 class="faq-title">Frequently Asked Questions</h1>
+            <p class="faq-description">Find answers to common questions about MUSEWRITE</p>
+        </div>
+
+        <div class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search questions...">
+        </div>
+
+        <div class="faq-categories">
+            <button class="category-btn active" data-category="all">All</button>
+            <button class="category-btn" data-category="getting-started">Getting Started</button>
+            <button class="category-btn" data-category="writing">Writing</button>
+            <button class="category-btn" data-category="publishing">Publishing</button>
+            <button class="category-btn" data-category="account">Account</button>
+        </div>
+
+        <div class="faq-list"></div>
+    </div>
+
+    <script>
+        const faqData = {
+            'all': [
+                {
+                    question: 'How do I start writing on MUSEWRITE?',
+                    answer: 'Create an account, click "Write" in the navigation, choose your story settings, and start writing in our editor.'
+                },
+                {
+                    question: 'What genres are supported?',
+                    answer: 'We support all major genres including Fiction, Non-fiction, Poetry, Short Stories, and Serialized Fiction.'
+                },
+                {
+                    question: 'How does the publishing process work?',
+                    answer: 'Complete your story, format it, add tags and descriptions, submit for review, and publish after approval.'
+                }
+            ],
+            'getting-started': [
+                {
+                    question: 'How do I create an account?',
+                    answer: 'Click Sign Up, enter your details, verify your email, and complete your profile.'
+                },
+                {
+                    question: 'Is MUSEWRITE free to use?',
+                    answer: 'Yes, basic features are free. Premium features are available with a subscription.'
+                }
+            ],
+            'writing': [
+                {
+                    question: 'Can I save drafts?',
+                    answer: 'Yes, all work is automatically saved as you write.'
+                },
+                {
+                    question: 'What writing tools are available?',
+                    answer: 'We offer a rich text editor, grammar checker, and AI writing assistant.'
+                }
+            ],
+            'publishing': [
+                {
+                    question: 'How long is the review process?',
+                    answer: 'Reviews typically take 24-48 hours.'
+                },
+                {
+                    question: 'Can I edit after publishing?',
+                    answer: 'Yes, you can edit published works anytime.'
+                }
+            ],
+            'account': [
+                {
+                    question: 'How do I reset my password?',
+                    answer: 'Click Forgot Password on the login page and follow the instructions.'
+                },
+                {
+                    question: 'Can I have multiple pen names?',
+                    answer: 'Yes, you can create multiple pen names in your profile settings.'
+                }
+            ]
+        };
+
+        function displayFAQs(category) {
+            const faqList = document.querySelector('.faq-list');
+            faqList.innerHTML = '';
+            
+            const faqs = category === 'all' ? 
+                Object.values(faqData).flat() : 
+                faqData[category] || [];
+
+            faqs.forEach(faq => {
+                const faqItem = document.createElement('div');
+                faqItem.className = 'faq-item';
+                faqItem.innerHTML = `
+                    <div class="faq-question">
+                        <h3>${faq.question}</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>${faq.answer}</p>
+                    </div>
+                `;
+                faqList.appendChild(faqItem);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            displayFAQs('all');
+
+            document.querySelector('.faq-list').addEventListener('click', (e) => {
+                const question = e.target.closest('.faq-question');
+                if (question) {
+                    const faqItem = question.parentElement;
+                    faqItem.classList.toggle('active');
+                }
+            });
+
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelector('.category-btn.active').classList.remove('active');
+                    btn.classList.add('active');
+                    displayFAQs(btn.dataset.category);
+                });
+            });
+
+            document.querySelector('.search-input').addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const allFaqs = Object.values(faqData).flat();
+                const filteredFaqs = allFaqs.filter(faq => 
+                    faq.question.toLowerCase().includes(searchTerm) || 
+                    faq.answer.toLowerCase().includes(searchTerm)
+                );
+                
+                const faqList = document.querySelector('.faq-list');
+                faqList.innerHTML = '';
+                
+                filteredFaqs.forEach(faq => {
+                    const faqItem = document.createElement('div');
+                    faqItem.className = 'faq-item';
+                    faqItem.innerHTML = `
+                        <div class="faq-question">
+                            <h3>${faq.question}</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>${faq.answer}</p>
+                        </div>
+                    `;
+                    faqList.appendChild(faqItem);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

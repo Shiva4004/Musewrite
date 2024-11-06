@@ -1,0 +1,670 @@
+<!-- setup.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Your Story | MUSEWRITE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #1a2a6c;
+            --secondary: #b21f1f;
+            --accent: #fdbb2d;
+            --bg-gradient: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            --text-primary: #333;
+            --text-secondary: #666;
+            --border-color: #ddd;
+            --success: #28a745;
+            --error: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .setup-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .setup-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .setup-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5em;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .setup-progress {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            margin: 0 15px;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .setup-form {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        .cover-section {
+            position: relative;
+        }
+
+        .cover-upload {
+            width: 100%;
+            aspect-ratio: 2/3;
+            border: 2px dashed var(--accent);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .cover-upload:hover {
+            border-color: var(--primary);
+            background: rgba(0,0,0,0.02);
+        }
+
+        .cover-upload i {
+            font-size: 2em;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .cover-preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(253,187,45,0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .tagify {
+            --tags-border-color: var(--border-color);
+            --tags-hover-border-color: var(--accent);
+            --tags-focus-border-color: var(--primary);
+        }
+
+        .character-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .character-item {
+            background: var(--accent);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remove-character {
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .remove-character:hover {
+            opacity: 1;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .copyright-info {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--error);
+        }
+
+        @media (max-width: 768px) {
+            .setup-form {
+                grid-template-columns: 1fr;
+            }
+
+            .setup-container {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="setup-container">
+        <div class="setup-header">
+            <h1>Create Your Story</h1>
+            <p>Set up your story details to begin your writing journey</p>
+        </div>
+
+        <div class="setup-progress">
+            <div class="progress-step">
+                <div class="step-number">1</div>
+                <span>Story Details</span>
+            </div>
+            <div class="progress-step">
+                <div class="step-number">2</div>
+                <span>Settings</span>
+            </div>
+            <div class="progress-step">
+                <div class="step-number">3</div>
+                <span>Publish</span>
+            </div>
+        </div>
+
+        <form id="storySetupForm" class="setup-form">
+            <div class="cover-section">
+                <div class="cover-upload" id="coverUpload">
+                    <i class="fas fa-image"></i>
+                    <p>Add Cover Image</p>
+                    <input type="file" id="coverInput" hidden accept="image/*">
+                    <img id="coverPreview" class="cover-preview">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-group">
+                    <label class="form-label">Story Title</label>
+                    <input type="text" class="form-input" id="storyTitle" 
+                           placeholder="Enter your story title" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input" id="storyDescription" 
+                              rows="4" placeholder="What's your story about?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Main Characters</label>
+                    <input type="text" class="form-input" id="mainCharacters" 
+                           placeholder="Add character names">
+                    <div class="character-list" id="characterList"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" id="category" required>
+                        <option value="">Select a category</option>
+                        <option value="action">Action</option>
+                        <option value="adventure">Adventure</option>
+                        <option value="romance">Romance</option>
+                        <option value="fantasy">Fantasy</option>
+                        <option value="mystery">Mystery</option>
+                        <option value="horror">Horror</option>
+                        <option value="thriller">Thriller</option>
+                        <option value="scifi">Science Fiction</option>
+                        <option value="historical">Historical Fiction</option>
+                        <option value="contemporary">Contemporary</option>
+                        <option value="literary">Literary Fiction</option>
+                        <option value="poetry">Poetry</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Tags</label>
+                    <input type="text" class="form-input" id="storyTags" 
+                           placeholder="Add relevant tags">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Target Audience</label>
+                    <select class="form-select" id="targetAudience" required>
+                        <option value="">Select target audience</option>
+                        <option value="young-adult">Young Adult (13-18 years)</option>
+                        <option value="new-adult">New Adult (18-25 years)</option>
+                        <option value="adult">Adult (25+ years)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Language</label>
+                    <select class="form-select" id="language" required>
+                        <option value="en">English</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                        <option value="it">Italian</option>
+                        <option value="pt">Portuguese</option>
+                        <option value="ru">Russian</option>
+                        <option value="ja">Japanese</option>
+                        <option value="ko">Korean</option>
+                        <option value="zh">Chinese</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Copyright</label>
+                    <select class="form-select" id="copyright" required>
+                        <option value="all-rights">All Rights Reserved</option>
+                        <option value="public-domain">Public Domain</option>
+                        <option value="cc-attribution">Creative Commons (CC) Attribution</option>
+                        <option value="cc-noncommercial">CC Attribution NonCommercial</option>
+                        <option value="cc-noderivs">CC Attribution NoDerivs</option>
+                        <option value="cc-sharealike">CC Attribution ShareAlike</option>
+                    </select>
+                    <p class="copyright-info" id="copyrightInfo">
+                        You retain all rights to your work
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Content Settings</label>
+                    <div class="toggle-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="matureContent">
+                            <span class="slider"></span>
+                        </label>
+                        <span>Mature Content</span>
+                    </div>
+                    <div class="toggle-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="ynEnabled">
+                            <span class="slider"></span>
+                        </label>
+                        <span>Enable Y/N Format</span>
+                    </div>
+                    <div class="toggle-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="aiAssistEnabled">
+                            <span class="slider"></span>
+                        </label>
+                        <span>Enable AI Assistance</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button type="button" class="btn btn-secondary" id="cancelButton">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create Story</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getStorage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBgCsFBQxndn6jqx6BWy0nMGrNy0A7tGXQ",
+            authDomain: "musewrite-71e8c.firebaseapp.com",
+            projectId: "musewrite-71e8c",
+            storageBucket: "musewrite-71e8c.appspot.com",
+            messagingSenderId: "497700060224",
+            appId: "1:497700060224:web:6d23b3dafaa68a954b73a5"
+        };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+  const auth = getAuth(app);
+
+  // Make these available globally
+  window.db = db;
+  window.storage = storage;
+  window.auth = auth;
+
+        // Initialize Tagify
+        const tagsInput = document.getElementById('storyTags');
+        const charactersInput = document.getElementById('mainCharacters');
+        
+        const tagsTagify = new Tagify(tagsInput, {
+            maxTags: 10,
+            dropdown: {
+                maxItems: 20,
+                classname: "tags-look",
+                enabled: 0,
+                closeOnSelect: false
+            }
+        });
+
+        const charactersTagify = new Tagify(charactersInput, {
+            maxTags: 20,
+            dropdown: {
+                maxItems: 20,
+                classname: "tags-look",
+                enabled: 0,
+                closeOnSelect: false
+            }
+        });
+
+        // Cover Image Handling
+        const coverUpload = document.getElementById('coverUpload');
+        const coverInput = document.getElementById('coverInput');
+        const coverPreview = document.getElementById('coverPreview');
+
+        coverUpload.addEventListener('click', () => coverInput.click());
+
+        coverInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        // Create local preview using FileReader
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            coverPreview.src = e.target.result;
+            coverPreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Update the form submission handler
+const uploadCover = async (file) => {
+    const storageRef = ref(storage, `covers/${Date.now()}_${file.name}`);
+    const metadata = {
+        contentType: file.type,
+        cacheControl: 'public,max-age=31536000'
+    };
+    
+    await uploadBytes(storageRef, file, metadata);
+    return getDownloadURL(storageRef);
+};
+
+// In your form submission
+if (coverInput.files[0]) {
+    coverURL = await uploadCover(coverInput.files[0]);
+}
+
+        // Copyright Information Update
+        const copyrightSelect = document.getElementById('copyright');
+        const copyrightInfo = document.getElementById('copyrightInfo');
+
+        const copyrightDescriptions = {
+            'all-rights': 'You retain all rights to your work',
+            'public-domain': 'Your work can be freely used by anyone',
+            'cc-attribution': 'Others can use your work with attribution',
+            'cc-noncommercial': 'Others can use your work non-commercially with attribution',
+            'cc-noderivs': 'Others can use your work with attribution, no derivatives allowed',
+            'cc-sharealike': 'Others can use your work with attribution, derivatives must be shared alike'
+        };
+
+        copyrightSelect.addEventListener('change', () => {
+            copyrightInfo.textContent = copyrightDescriptions[copyrightSelect.value];
+        });
+
+        // Form Submission
+        document.getElementById('storySetupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                title: document.getElementById('storyTitle').value,
+                description: document.getElementById('storyDescription').value,
+                characters: charactersTagify.value,
+                category: document.getElementById('category').value,
+                tags: tagsTagify.value,
+                targetAudience: document.getElementById('targetAudience').value,
+                language: document.getElementById('language').value,
+                copyright: document.getElementById('copyright').value,
+                matureContent: document.getElementById('matureContent').checked,
+                ynEnabled: document.getElementById('ynEnabled').checked,
+                aiAssistEnabled: document.getElementById('aiAssistEnabled').checked,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                status: 'draft'
+            };
+
+           // Inside the form submission handler
+try {
+    // Upload cover image if exists
+    let coverURL = null;
+    if (coverInput.files[0]) {
+        const storageRef = ref(storage, `covers/${Date.now()}_${coverInput.files[0].name}`);
+        await uploadBytes(storageRef, coverInput.files[0]);
+        coverURL = await getDownloadURL(storageRef);
+    }
+
+    const storageRef = ref(storage, `covers/${Date.now()}_${coverInput.files[0].name}`);
+const metadata = {
+    contentType: coverInput.files[0].type,
+    customMetadata: {
+        'Access-Control-Allow-Origin': 'https://musewrite.in'
+    }
+};
+await uploadBytes(storageRef, coverInput.files[0], metadata);
+
+
+    showNotification('Story created successfully!', 'success');
+    
+    // Redirect to writing interface
+    setTimeout(() => {
+        window.location.href = `/write.html?id=${storyRef.id}`;
+    }, 1500);
+} catch (error) {
+    console.error('Error creating story:', error);
+    showNotification('Failed to create story. Please try again.', 'error');
+}
+
+        });
+
+        // Notification System
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Cancel Button
+        document.getElementById('cancelButton').addEventListener('click', () => {
+            if (confirm('Are you sure you want to cancel? All progress will be lost.')) {
+                window.location.href = '/dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>

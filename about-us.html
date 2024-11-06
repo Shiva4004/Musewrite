@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSEWRITE - About Us</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root[data-theme="dark"] {
+            --primary: #8b95f6;
+            --primary-light: #b3c7f7;
+            --secondary: #faaf90;
+            --secondary-light: #f8b8d0;
+            --accent: #9b8bf4;
+            --bg-primary: #0a0f1f;
+            --bg-secondary: #141b2d;
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+            --gradient-accent: linear-gradient(135deg, var(--primary-light), var(--accent));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero-section {
+            height: 60vh;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .mission-section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .mission-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .mission-card {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .mission-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .mission-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .team-section {
+            background: var(--bg-secondary);
+            padding: 4rem 2rem;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 3rem auto 0;
+        }
+
+        .team-member {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .member-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .member-info {
+            padding: 1.5rem;
+        }
+
+        .member-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .member-role {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+        }
+
+        .stats-section {
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 3rem auto 0;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 15px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .mission-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <div class="brand-logo">
+                <span class="logo-text">MUSE</span>
+                <span class="logo-text-accent">WRITE</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Empowering Stories, Connecting Writers</h1>
+            <p>Building the future of digital storytelling</p>
+        </div>
+    </section>
+
+    <section class="mission-section">
+        <h2>Our Mission</h2>
+        <div class="mission-grid">
+            <div class="mission-card">
+                <i class="fas fa-pen-fancy mission-icon"></i>
+                <h3>Empower Creativity</h3>
+                <p>Providing tools and platforms for writers to bring their stories to life</p>
+            </div>
+            <div class="mission-card">
+                <i class="fas fa-users mission-icon"></i>
+                <h3>Build Community</h3>
+                <p>Creating spaces for writers to connect, collaborate, and grow together</p>
+            </div>
+            <div class="mission-card">
+                <i class="fas fa-globe mission-icon"></i>
+                <h3>Global Reach</h3>
+                <p>Making stories accessible to readers worldwide</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="team-section">
+        <h2>Our Team</h2>
+        <div class="team-grid">
+            <div class="team-member">
+                <img src="https://source.unsplash.com/random/400x500?portrait" alt="Team Member" class="member-image">
+                <div class="member-info">
+                    <h3 class="member-name">Sarah Chen</h3>
+                    <p class="member-role">Founder & CEO</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="team-member">
+                <img src="https://source.unsplash.com/random/400x501?portrait" alt="Team Member" class="member-image">
+                <div class="member-info">
+                    <h3 class="member-name">Michael Ross</h3>
+                    <p class="member-role">Head of Product</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="team-member">
+                <img src="https://source.unsplash.com/random/400x502?portrait" alt="Team Member" class="member-image">
+                <div class="member-info">
+                    <h3 class="member-name">Emma Wilson</h3>
+                    <p class="member-role">Creative Director</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <h2>Our Impact</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">1M+</div>
+                <p>Writers</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">5M+</div>
+                <p>Stories</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">50M+</div>
+                <p>Readers</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100+</div>
+                <p>Countries</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        const currentTheme = localStorage.getItem('theme');
+        
+        if (currentTheme) {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+        } else {
+            document.documentElement.setAttribute('data-theme', 
+                prefersDarkScheme.matches ? 'dark' : 'light'
+            );
+        }
+    </script>
+</body>
+</html>

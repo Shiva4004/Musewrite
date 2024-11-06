@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSEWRITE - Discover Stories</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root[data-theme="dark"] {
+            --primary: #8b95f6;
+            --primary-light: #b3c7f7;
+            --secondary: #faaf90;
+            --secondary-light: #f8b8d0;
+            --accent: #9b8bf4;
+            --bg-primary: #0a0f1f;
+            --bg-secondary: #141b2d;
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+            --gradient-accent: linear-gradient(135deg, var(--primary-light), var(--accent));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .discover-container {
+            max-width: 1400px;
+            margin: 80px auto 0;
+            padding: 2rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 4rem 0;
+            background: var(--gradient-primary);
+            border-radius: 20px;
+            margin-bottom: 3rem;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .filters-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-pills {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-pill {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-pill.active {
+            background: var(--gradient-accent);
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 3rem 1rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .story-card {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .story-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .story-cover {
+            position: relative;
+            height: 200px;
+        }
+
+        .story-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .story-category {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0,0,0,0.7);
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        .story-content {
+            padding: 1.5rem;
+        }
+
+        .story-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .story-author {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .story-preview {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .story-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .story-stats {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .read-btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 20px;
+            background: var(--gradient-accent);
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .read-btn:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .discover-container {
+                padding: 1rem;
+            }
+
+            .filters-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-bar {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <div class="brand-logo">MUSEWRITE</div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="discover-container">
+        <section class="hero-section">
+            <h1 class="hero-title">Discover Amazing Stories</h1>
+            <p class="hero-subtitle">Explore a world of creativity through the eyes of talented writers</p>
+        </section>
+
+        <section class="filters-section">
+            <div class="filter-pills">
+                <button class="filter-pill active">All</button>
+                <button class="filter-pill">Fantasy</button>
+                <button class="filter-pill">Romance</button>
+                <button class="filter-pill">Mystery</button>
+                <button class="filter-pill">Sci-Fi</button>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Search stories...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+        </section>
+
+        <section class="stories-grid" id="storiesGrid"></section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, query, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBgCsFBQxndn6jqx6BWy0nMGrNy0A7tGXQ",
+            authDomain: "musewrite-71e8c.firebaseapp.com",
+            projectId: "musewrite-71e8c",
+            storageBucket: "musewrite-71e8c.appspot.com",
+            messagingSenderId: "497700060224",
+            appId: "1:497700060224:web:6d23b3dafaa68a954b73a5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore();
+
+        async function loadStories() {
+            const storiesGrid = document.getElementById('storiesGrid');
+            const storiesQuery = query(collection(db, 'stories'));
+
+            try {
+                const snapshot = await getDocs(storiesQuery);
+                storiesGrid.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    const story = doc.data();
+                    storiesGrid.innerHTML += `
+                        <div class="story-card">
+                            <div class="story-cover">
+                                <img src="${story.coverImage || 'https://source.unsplash.com/random/600x400?book'}" alt="${story.title}">
+                                <span class="story-category">${story.category}</span>
+                            </div>
+                            <div class="story-content">
+                                <h3 class="story-title">${story.title}</h3>
+                                <p class="story-author">By ${story.authorName}</p>
+                                <p class="story-preview">${story.description}</p>
+                                <div class="story-meta">
+                                    <div class="story-stats">
+                                        <span><i class="fas fa-heart"></i> ${story.likes || 0}</span>
+                                        <span><i class="fas fa-eye"></i> ${story.reads || 0}</span>
+                                    </div>
+                                    <button class="read-btn" onclick="window.location.href='/read.html?id=${doc.id}'">Read</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error loading stories:', error);
+            }
+        }
+
+        loadStories();
+
+        document.querySelector('.search-input').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.story-card').forEach(card => {
+                const title = card.querySelector('.story-title').textContent.toLowerCase();
+                const description = card.querySelector('.story-preview').textContent.toLowerCase();
+                card.style.display = title.includes(searchTerm) || description.includes(searchTerm) ? 'block' : 'none';
+            });
+        });
+
+        document.querySelectorAll('.filter-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                document.querySelector('.filter-pill.active').classList.remove('active');
+                pill.classList.add('active');
+                const category = pill.textContent;
+                document.querySelectorAll('.story-card').forEach(card => {
+                    if (category === 'All') {
+                        card.style.display = 'block';
+                    } else {
+                        const storyCategory = card.querySelector('.story-category').textContent;
+                        card.style.display = storyCategory === category ? 'block' : 'none';
+                    }
+                });
+            });
+        });
+
+        const themeToggle = document.getElementById('themeToggle');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            const icon = themeToggle.querySelector('i');
+            icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        const savedTheme = localStorage.getItem('theme') || (prefersDarkScheme.matches ? 'dark' : 'light');
+        setTheme(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        prefersDarkScheme.addEventListener('change', (e) => {
+            const newTheme = e.matches ? 'dark' : 'light';
+            setTheme(newTheme);
+        });
+    </script>
+</body>
+</html>

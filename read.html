@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSEWRITE - Immersive Reading</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&family=OpenDyslexic:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+
+    <style>
+        :root[data-theme="dark"] {
+            --primary: #8b95f6;
+            --primary-light: #b3c7f7;
+            --secondary: #faaf90;
+            --secondary-light: #f8b8d0;
+            --accent: #9b8bf4;
+            --bg-primary: #0a0f1f;
+            --bg-secondary: #141b2d;
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+            --gradient-accent: linear-gradient(135deg, var(--primary-light), var(--accent));
+            --border-color: rgba(255, 255, 255, 0.1);
+            --highlight-color: rgba(155, 139, 244, 0.3);
+            --note-bg: rgba(250, 175, 144, 0.1);
+        }
+
+        :root[data-theme="light"] {
+            --primary: #828df7;
+            --primary-light: #b3c7f7;
+            --secondary: #faaf90;
+            --secondary-light: #f8b8d0;
+            --accent: #9381f8;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --card-bg: rgba(0, 0, 0, 0.05);
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+            --gradient-accent: linear-gradient(135deg, var(--primary-light), var(--accent));
+            --border-color: #e0e0e0;
+            --highlight-color: rgba(147, 129, 248, 0.2);
+            --note-bg: rgba(250, 175, 144, 0.1);
+        }
+
+        :root[data-theme="sepia"] {
+            --primary: #8b4513;
+            --primary-light: #d2691e;
+            --secondary: #cd853f;
+            --secondary-light: #deb887;
+            --accent: #a0522d;
+            --bg-primary: #f4ecd8;
+            --bg-secondary: #fdf5e6;
+            --text-primary: #5c4033;
+            --text-secondary: #8b4513;
+            --card-bg: rgba(139, 69, 19, 0.05);
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+            --gradient-accent: linear-gradient(135deg, var(--primary-light), var(--accent));
+            --border-color: #d2b48c;
+            --highlight-color: rgba(160, 82, 45, 0.2);
+            --note-bg: rgba(205, 133, 63, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Merriweather', serif;
+            line-height: 1.8;
+            transition: all 0.3s ease;
+        }
+
+        .header-main {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .brand-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-text {
+            color: var(--text-primary);
+        }
+
+        .logo-text-accent {
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .reading-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: var(--card-bg);
+            transform: translateY(-2px);
+        }
+
+        .profile-dropdown {
+            position: relative;
+        }
+
+        .profile-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 120%;
+            right: 0;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 0.5rem;
+            min-width: 200px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            border: 1px solid var(--border-color);
+        }
+
+        .dropdown-menu.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+        }
+
+        .dropdown-menu a:hover {
+            background: var(--card-bg);
+        }
+
+        .main-container {
+            display: flex;
+            margin-top: 60px;
+            position: relative;
+        }
+
+        .chapter-sidebar {
+            width: 300px;
+            height: calc(100vh - 60px);
+            position: fixed;
+            left: 0;
+            background: var(--bg-secondary);
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+
+        .chapter-sidebar.collapsed {
+            transform: translateX(-300px);
+        }
+
+        .reading-area {
+            flex: 1;
+            margin-left: 300px;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            transition: margin-left 0.3s ease;
+        }
+
+        .reading-area.expanded {
+            margin-left: 0;
+        }
+
+        .chapter-list {
+            margin-top: 20px;
+        }
+
+        .chapter-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chapter-item:hover {
+            background: var(--gradient-accent);
+            color: var(--bg-primary);
+        }
+
+        .chapter-item.active {
+            background: var(--gradient-primary);
+            color: var(--bg-primary);
+        }
+
+        .chapter-progress {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .story-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .story-title {
+            font-size: 2.5em;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 20px;
+        }
+
+        .story-meta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            color: var(--text-secondary);
+        }
+
+        .story-content {
+            font-size: 18px;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .reading-progress {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-accent);
+            transform-origin: left;
+            transform: scaleX(0);
+            transition: transform 0.1s ease;
+        }
+
+        .reading-settings {
+            position: fixed;
+            right: -300px;
+            top: 60px;
+            width: 300px;
+            height: calc(100vh - 60px);
+            background: var(--bg-secondary);
+            padding: 20px;
+            transition: right 0.3s ease;
+            border-left: 1px solid var(--border-color);
+            z-index: 900;
+        }
+
+        .reading-settings.active {
+            right: 0;
+        }
+
+        .settings-section {
+            margin-bottom: 30px;
+        }
+
+        .settings-section h3 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .font-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .font-size-btn {
+            background: var(--card-bg);
+            border: none;
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .font-size-btn:hover {
+            background: var(--gradient-accent);
+            color: var(--bg-primary);
+        }
+
+        .font-family-select {
+            width: 100%;
+            padding: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 5px;
+        }
+
+        .theme-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .theme-option {
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .theme-option:hover {
+            transform: translateY(-2px);
+        }
+
+        .theme-option.dark {
+            background: #0a0f1f;
+            color: #fff;
+        }
+
+        .theme-option.light {
+            background: #ffffff;
+            color: #1a1a1a;
+            border: 1px solid var(--border-color);
+        }
+
+        .theme-option.sepia {
+            background: #f4ecd8;
+            color: #5c4033;
+        }
+
+        .highlight-container {
+            position: absolute;
+            background: var(--bg-secondary);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+        }
+
+        .highlight-container.active {
+            display: flex;
+            gap: 10px;
+        }
+
+        .highlight-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .highlight-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .highlight-yellow { background: #ffd700; }
+        .highlight-green { background: #90ee90; }
+        .highlight-blue { background: #87ceeb; }
+        .highlight-pink { background: #ffb6c1; }
+
+        .note-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1100;
+        }
+
+        .note-popup.active {
+            display: block;
+        }
+
+        .note-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+
+        .note-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .note-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-note {
+            background: var(--gradient-accent);
+            color: var(--bg-primary);
+        }
+
+        .cancel-note {
+            background: var(--card-bg);
+            color: var(--text-primary);
+        }
+
+        .reactions-container {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            background: var(--bg-secondary);
+            padding: 10px;
+            border-radius: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            gap: 10px;
+        }
+
+        .reaction-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .reaction-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .reaction-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--accent);
+            color: var(--bg-primary);
+            font-size: 0.8rem;
+            padding: 2px 5px;
+            border-radius: 10px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .share-container {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .share-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-accent);
+            color: var(--bg-primary);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .chapter-sidebar {
+                transform: translateX(-300px);
+            }
+
+            .reading-area {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .reading-settings {
+                width: 100%;
+                right: -100%;
+            }
+
+            .reading-settings.active {
+                right: 0;
+            }
+        }
+    .voice-controls {
+        position: fixed;
+        top: 0;
+        right: -400px;
+        width: 400px;
+        height: 100vh;
+        background: var(--bg-secondary);
+        transition: right 0.3s ease;
+        z-index: 1000;
+        box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+    }
+
+    .voice-controls.active {
+        right: 0;
+    }
+
+    .voice-panel {
+        padding: 2rem;
+        height: 100%;
+        overflow-y: auto;
+    }
+
+    .voice-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .voice-options {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .option-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .option-group label {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    .option-group select,
+    .option-group input {
+        padding: 0.8rem;
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        color: var(--text-primary);
+    }
+
+    .record-btn {
+        width: 100%;
+        padding: 1rem;
+        background: var(--gradient-1);
+        border: none;
+        border-radius: 8px;
+        color: var(--bg-primary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: transform 0.3s ease;
+    }
+
+    .record-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .recording-status {
+        text-align: center;
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    </style>
+</head>
+<body>
+    <header class="header-main">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="brand-logo">
+                    <span class="logo-text">MUSE</span>
+                    <span class="logo-text-accent">WRITE</span>
+                </div>
+            </div>
+
+            <div class="reading-controls">
+                <button class="control-btn" id="toggleChapters" title="Toggle Chapters">
+                    <i class="fas fa-list"></i>
+                </button>
+                <button class="control-btn" id="toggleSettings" title="Reading Settings">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button class="control-btn" id="toggleTheme" title="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+            
+<div class="reading-controls">
+    <div class="voice-controls">
+        <div class="voice-panel">
+            <div class="voice-header">
+                <h3>Voice Settings</h3>
+                <button class="close-panel" id="closeVoicePanel">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="voice-options">
+                <div class="option-group">
+                    <label>Voice Type</label>
+                    <select id="voiceType">
+                        <option value="default">Default Voices</option>
+                        <option value="clone">Clone Your Voice</option>
+                    </select>
+                </div>
+
+                <div class="default-voices" id="defaultVoices">
+                    <div class="option-group">
+                        <label>Select Voice</label>
+                        <select id="defaultVoice">
+                            <option value="emma">Emma (Casual)</option>
+                            <option value="james">James (Professional)</option>
+                            <option value="lily">Lily (Playful)</option>
+                            <option value="morgan">Morgan (Narrative)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="clone-voice hidden" id="cloneVoice">
+                    <button class="record-btn" id="recordVoice">
+                        <i class="fas fa-microphone"></i>
+                        Record Your Voice
+                    </button>
+                    <div class="recording-status">Click to start recording</div>
+                </div>
+
+                <div class="option-group">
+                    <label>Language</label>
+                    <select id="language"></select>
+                </div>
+
+                <div class="option-group">
+                    <label>Speed: <span id="speedValue">1.0x</span></label>
+                    <input type="range" id="speed" min="0.5" max="2" step="0.1" value="1">
+                </div>
+
+                <div class="option-group">
+                    <label>Pitch: <span id="pitchValue">1.0x</span></label>
+                    <input type="range" id="pitch" min="0.5" max="2" step="0.1" value="1">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tts-controls">
+        <button class="tts-btn settings-btn" id="voiceSettings">
+            <i class="fas fa-sliders-h"></i>
+        </button>
+        <button class="tts-btn" id="playTTS">
+            <i class="fas fa-play"></i>
+        </button>
+        <div class="tts-progress">
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+</div>
+
+
+            <div class="nav-actions">
+                <div class="profile-dropdown">
+                    <button class="profile-btn" id="profileBtn">
+                        <img src="" alt="Profile" id="profileImg" class="profile-img">
+                    </button>
+                    <div class="dropdown-menu" id="profileMenu">
+                        <a href="/dashboard.html"><i class="fas fa-columns"></i> Dashboard</a>
+                        <a href="/my-stories.html"><i class="fas fa-book"></i> My Stories</a>
+                        <a href="/settings.html"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="reading-progress" id="readingProgress"></div>
+
+    <div class="main-container">
+        <aside class="chapter-sidebar" id="chapterSidebar">
+            <h2>Chapters</h2>
+            <div class="chapter-list" id="chapterList"></div>
+        </aside>
+
+        <main class="reading-area" id="readingArea">
+            <div class="story-header">
+                <h1 class="story-title" id="storyTitle"></h1>
+                <div class="story-meta">
+                    <span class="author" id="storyAuthor"></span>
+                    <span class="reading-time" id="readingTime"></span>
+                </div>
+            </div>
+            <div class="story-content" id="storyContent"></div>
+        </main>
+
+        <div class="reading-settings" id="readingSettings">
+            <div class="settings-section">
+                <h3>Font Size</h3>
+                <div class="font-controls">
+                    <button class="font-size-btn" data-size="decrease">A-</button>
+                    <button class="font-size-btn" data-size="reset">Reset</button>
+                    <button class="font-size-btn" data-size="increase">A+</button>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>Font Family</h3>
+                <select class="font-family-select" id="fontFamily">
+                    <option value="Merriweather">Merriweather</option>
+                    <option value="Inter">Inter</option>
+                    <option value="OpenDyslexic">OpenDyslexic</option>
+                    <option value="Georgia">Georgia</option>
+                </select>
+            </div>
+
+            <div class="settings-section">
+                <h3>Theme</h3>
+                <div class="theme-options">
+                    <div class="theme-option dark" data-theme="dark">Dark</div>
+                    <div class="theme-option light" data-theme="light">Light</div>
+                    <div class="theme-option sepia" data-theme="sepia">Sepia</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="highlight-container" id="highlightContainer">
+        <button class="highlight-btn highlight-yellow" data-color="yellow">
+            <i class="fas fa-highlighter"></i>
+        </button>
+        <button class="highlight-btn highlight-green" data-color="green">
+            <i class="fas fa-highlighter"></i>
+        </button>
+        <button class="highlight-btn highlight-blue" data-color="blue">
+            <i class="fas fa-highlighter"></i>
+        </button>
+        <button class="highlight-btn highlight-pink" data-color="pink">
+            <i class="fas fa-highlighter"></i>
+        </button>
+        <button class="highlight-btn" data-action="note">
+            <i class="fas fa-sticky-note"></i>
+        </button>
+    </div>
+
+    <div class="note-popup" id="notePopup">
+        <textarea class="note-textarea" placeholder="Add your note here..."></textarea>
+        <div class="note-actions">
+            <button class="note-btn cancel-note">Cancel</button>
+            <button class="note-btn save-note">Save Note</button>
+        </div>
+    </div>
+
+    <div class="reactions-container">
+        <button class="reaction-btn" data-reaction="heart">
+            ❤️
+            <span class="reaction-count">0</span>
+        </button>
+        <button class="reaction-btn" data-reaction="clap">
+            👏
+            <span class="reaction-count">0</span>
+        </button>
+        <button class="reaction-btn" data-reaction="fire">
+            🔥
+            <span class="reaction-count">0</span>
+        </button>
+    </div>
+
+    <div class="share-container">
+        <button class="share-btn" data-platform="twitter">
+            <i class="fab fa-twitter"></i>
+        </button>
+        <button class="share-btn" data-platform="facebook">
+            <i class="fab fa-facebook-f"></i>
+        </button>
+        <button class="share-btn" data-platform="copy">
+            <i class="fas fa-link"></i>
+        </button>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, doc, getDoc, updateDoc, increment } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getAuth } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    
+        const firebaseConfig = {
+            apiKey: "AIzaSyBgCsFBQxndn6jqx6BWy0nMGrNy0A7tGXQ",
+            authDomain: "musewrite-71e8c.firebaseapp.com",
+            projectId: "musewrite-71e8c",
+            storageBucket: "musewrite-71e8c.appspot.com",
+            messagingSenderId: "497700060224",
+            appId: "1:497700060224:web:6d23b3dafaa68a954b73a5"
+        };
+    
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+    
+        let currentStory = null;
+        let currentChapter = null;
+        let userHighlights = [];
+        let userNotes = [];
+        let fontSize = 18;
+        const baseFontSize = 18;
+
+        // TTS Controls Implementation
+let mediaRecorder;
+let audioChunks = [];
+let currentVoiceId = null;
+let isPlaying = false;
+
+async function initVoiceControls() {
+    // Load languages
+    const languages = await fetch('https://apimusewrite.vercel.app/api/tts/languages').then(res => res.json());
+    const languageSelect = document.getElementById('language');
+    Object.entries(languages).forEach(([code, name]) => {
+        languageSelect.insertAdjacentHTML('beforeend', `<option value="${code}">${name}</option>`);
+    });
+
+    // Event listeners
+    document.getElementById('voiceSettings').addEventListener('click', () => {
+        document.querySelector('.voice-controls').classList.add('active');
+    });
+
+    document.getElementById('closeVoicePanel').addEventListener('click', () => {
+        document.querySelector('.voice-controls').classList.remove('active');
+    });
+
+    document.getElementById('voiceType').addEventListener('change', (e) => {
+        document.getElementById('defaultVoices').classList.toggle('hidden', e.target.value === 'clone');
+        document.getElementById('cloneVoice').classList.toggle('hidden', e.target.value === 'default');
+    });
+
+    // Voice recording setup
+    if (navigator.mediaDevices) {
+        const recordBtn = document.getElementById('recordVoice');
+        recordBtn.addEventListener('click', toggleRecording);
+    }
+
+    // Range input updates
+    ['speed', 'pitch'].forEach(param => {
+        const input = document.getElementById(param);
+        const value = document.getElementById(`${param}Value`);
+        input.addEventListener('input', () => {
+            value.textContent = `${input.value}x`;
+        });
+    });
+
+    // Play button
+    document.getElementById('playTTS').addEventListener('click', togglePlayback);
+}
+
+async function toggleRecording() {
+    if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+            audioChunks.push(event.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+            const audioBlob = new Blob(audioChunks);
+            const formData = new FormData();
+            formData.append('audio', audioBlob);
+
+            try {
+                const response = await fetch('https://apimusewrite.vercel.app/api/tts/clone', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                currentVoiceId = data.voice_id;
+                showToast('Voice cloned successfully!', 'success');
+            } catch (error) {
+                showToast('Error cloning voice', 'error');
+            }
+        };
+
+        mediaRecorder.start();
+        document.querySelector('.recording-status').textContent = 'Recording... Click to stop';
+    } else {
+        mediaRecorder.stop();
+        document.querySelector('.recording-status').textContent = 'Click to start recording';
+    }
+}
+
+async function togglePlayback() {
+    const playButton = document.getElementById('playTTS');
+    
+    if (isPlaying) {
+        if (window.audioPlayer) {
+            window.audioPlayer.pause();
+        }
+        playButton.innerHTML = '<i class="fas fa-play"></i>';
+        isPlaying = false;
+        return;
+    }
+
+    const text = document.getElementById('storyContent').textContent;
+    const settings = {
+        text,
+        voice_id: currentVoiceId,
+        voice_settings: {
+            speed: parseFloat(document.getElementById('speed').value),
+            pitch: parseFloat(document.getElementById('pitch').value)
+        },
+        language: document.getElementById('language').value
+    };
+
+    try {
+        playButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        
+        const response = await fetch('https://apimusewrite.vercel.app/api/tts/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(settings)
+        });
+
+        const data = await response.json();
+        if (data.status === 'success') {
+            window.audioPlayer = new Audio(`data:${data.format};base64,${data.audio}`);
+            
+            window.audioPlayer.addEventListener('play', () => {
+                playButton.innerHTML = '<i class="fas fa-pause"></i>';
+                isPlaying = true;
+            });
+
+            window.audioPlayer.addEventListener('ended', () => {
+                playButton.innerHTML = '<i class="fas fa-play"></i>';
+                isPlaying = false;
+            });
+
+            window.audioPlayer.addEventListener('timeupdate', () => {
+                const progress = (window.audioPlayer.currentTime / window.audioPlayer.duration) * 100;
+                document.querySelector('.progress-bar').style.width = `${progress}%`;
+            });
+
+            window.audioPlayer.play();
+        }
+    } catch (error) {
+        showToast('Error generating speech', 'error');
+        playButton.innerHTML = '<i class="fas fa-play"></i>';
+    }
+}
+
+// Initialize voice controls when document is ready
+document.addEventListener('DOMContentLoaded', initVoiceControls);
+
+    
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const storyId = urlParams.get('id');
+            
+            if (!storyId) {
+                window.location.href = '/discover.html';
+                return;
+            }
+    
+            try {
+                const storyDoc = await getDoc(doc(db, 'stories', storyId));
+                if (storyDoc.exists()) {
+                    currentStory = { id: storyId, ...storyDoc.data() };
+                    loadStory();
+                    setupEventListeners();
+                    loadUserPreferences();
+                    updateReadingProgress();
+                }
+            } catch (error) {
+                console.error('Error loading story:', error);
+            }
+        });
+    
+        function loadStory() {
+            document.getElementById('storyTitle').textContent = currentStory.title;
+            document.getElementById('storyAuthor').textContent = `By ${currentStory.authorName}`;
+            loadChapters();
+            if (currentStory.chapters && currentStory.chapters.length > 0) {
+                loadChapter(currentStory.chapters[0].id);
+            }
+        }
+    
+        function loadChapters() {
+            const chapterList = document.getElementById('chapterList');
+            chapterList.innerHTML = currentStory.chapters.map((chapter, index) => `
+                <div class="chapter-item" data-chapter-id="${chapter.id}">
+                    <span>Chapter ${index + 1}: ${chapter.title}</span>
+                    <span class="chapter-progress">0%</span>
+                </div>
+            `).join('');
+    
+            document.querySelectorAll('.chapter-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    loadChapter(item.dataset.chapterId);
+                });
+            });
+        }
+    
+        async function loadChapter(chapterId) {
+            currentChapter = currentStory.chapters.find(ch => ch.id === chapterId);
+            if (currentChapter) {
+                const content = document.getElementById('storyContent');
+                
+                if (typeof currentChapter.content === 'string') {
+                    content.innerHTML = currentChapter.content;
+                } else {
+                    const tempDiv = document.createElement('div');
+                    const tempQuill = new Quill(tempDiv);
+                    tempQuill.setContents(currentChapter.content);
+                    content.innerHTML = tempDiv.querySelector('.ql-editor').innerHTML;
+                }
+    
+                const reactions = currentStory.reactions || { heart: 0, clap: 0, fire: 0 };
+                Object.entries(reactions).forEach(([type, count]) => {
+                    const countElement = document.querySelector(`[data-reaction="${type}"] .reaction-count`);
+                    if (countElement) countElement.textContent = count;
+                });
+    
+                document.querySelectorAll('.chapter-item').forEach(item => {
+                    item.classList.toggle('active', item.dataset.chapterId === chapterId);
+                });
+    
+                const readingTime = Math.ceil((content.textContent.split(/\s+/).length || 0) / 200);
+                document.getElementById('readingTime').textContent = `${readingTime} min read`;
+    
+                try {
+                    await updateDoc(doc(db, 'stories', currentStory.id), {
+                        reads: increment(1)
+                    });
+                } catch (error) {
+                    console.error('Error updating read count:', error);
+                }
+            }
+        }
+
+        function setupEventListeners() {
+        const toggleChapters = document.getElementById('toggleChapters');
+        const toggleSettings = document.getElementById('toggleSettings');
+        const chapterSidebar = document.getElementById('chapterSidebar');
+        const readingSettings = document.getElementById('readingSettings');
+        const readingArea = document.getElementById('readingArea');
+
+        toggleChapters.addEventListener('click', () => {
+            chapterSidebar.classList.toggle('collapsed');
+            readingArea.classList.toggle('expanded');
+        });
+
+        toggleSettings.addEventListener('click', () => {
+            readingSettings.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.font-size-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const action = btn.dataset.size;
+                adjustFontSize(action);
+            });
+        });
+
+        document.getElementById('fontFamily').addEventListener('change', (e) => {
+            document.getElementById('storyContent').style.fontFamily = e.target.value;
+            localStorage.setItem('preferredFont', e.target.value);
+        });
+
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const theme = option.dataset.theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+            });
+        });
+
+        setupHighlighting();
+        setupReactions();
+        setupSharing();
+    }
+
+    function adjustFontSize(action) {
+        const content = document.getElementById('storyContent');
+        switch(action) {
+            case 'increase':
+                fontSize = Math.min(fontSize + 2, 32);
+                break;
+            case 'decrease':
+                fontSize = Math.max(fontSize - 2, 14);
+                break;
+            case 'reset':
+                fontSize = baseFontSize;
+                break;
+        }
+        content.style.fontSize = `${fontSize}px`;
+        localStorage.setItem('fontSize', fontSize);
+    }
+
+    function setupHighlighting() {
+        const content = document.getElementById('storyContent');
+        const highlightContainer = document.getElementById('highlightContainer');
+
+        content.addEventListener('mouseup', () => {
+            const selection = window.getSelection();
+            if (!selection.isCollapsed) {
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+                highlightContainer.style.top = `${rect.bottom + window.scrollY + 10}px`;
+                highlightContainer.style.left = `${rect.left + (rect.width / 2) - (highlightContainer.offsetWidth / 2)}px`;
+                highlightContainer.classList.add('active');
+            }
+        });    
+
+        document.querySelectorAll('.highlight-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const selection = window.getSelection();
+                if (!selection.isCollapsed) {
+                    if (btn.dataset.action === 'note') {
+                        showNotePopup(selection);
+                    } else {
+                        highlightSelection(selection, btn.dataset.color);
+                    }
+                    highlightContainer.classList.remove('active');
+                }
+            });
+        });
+    }
+
+    function highlightSelection(selection, color) {
+        const range = selection.getRangeAt(0);
+        const span = document.createElement('span');
+        span.style.backgroundColor = color;
+        span.className = 'highlighted';
+        range.surroundContents(span);
+        
+        const highlight = {
+            color,
+            text: selection.toString(),
+            chapterId: currentChapter.id,
+            timestamp: new Date()
+        };
+        userHighlights.push(highlight);
+        localStorage.setItem(`highlights_${currentStory.id}`, JSON.stringify(userHighlights));
+    }
+
+    function showNotePopup(selection) {
+        const notePopup = document.getElementById('notePopup');
+        const textarea = notePopup.querySelector('.note-textarea');
+        notePopup.classList.add('active');
+
+        notePopup.querySelector('.save-note').onclick = () => {
+            const note = {
+                text: selection.toString(),
+                note: textarea.value,
+                chapterId: currentChapter.id,
+                timestamp: new Date()
+            };
+            userNotes.push(note);
+            localStorage.setItem(`notes_${currentStory.id}`, JSON.stringify(userNotes));
+            notePopup.classList.remove('active');
+            textarea.value = '';
+            showToast('Note saved successfully!');
+        };
+
+        notePopup.querySelector('.cancel-note').onclick = () => {
+            notePopup.classList.remove('active');
+            textarea.value = '';
+        };
+    }
+
+    function setupReactions() {
+        document.querySelectorAll('.reaction-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                if (!auth.currentUser) {
+                    showToast('Please sign in to react to stories');
+                    return;
+                }
+
+                const reaction = btn.dataset.reaction;
+                const count = btn.querySelector('.reaction-count');
+                const currentCount = parseInt(count.textContent);
+                count.textContent = currentCount + 1;
+
+                try {
+                    await updateDoc(doc(db, 'stories', currentStory.id), {
+                        [`reactions.${reaction}`]: increment(1)
+                    });
+                    showToast('Reaction added!');
+                } catch (error) {
+                    count.textContent = currentCount; // Revert on error
+                    console.error('Error updating reaction:', error);
+                    showToast('Failed to add reaction');
+                }
+            });
+        });
+    }
+
+    function setupSharing() {
+        document.querySelectorAll('.share-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const platform = btn.dataset.platform;
+                const url = window.location.href;
+                const title = encodeURIComponent(currentStory.title);
+
+                switch(platform) {
+                    case 'twitter':
+                        window.open(`https://twitter.com/intent/tweet?text=Reading ${title} on MUSEWRITE&url=${url}`);
+                        break;
+                    case 'facebook':
+                        window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`);
+                        break;
+                    case 'copy':
+                        navigator.clipboard.writeText(url).then(() => {
+                            showToast('Link copied to clipboard!');
+                        });
+                        break;
+                }
+            });
+        });
+    }
+
+    function updateReadingProgress() {
+        const progress = document.getElementById('readingProgress');
+        window.addEventListener('scroll', () => {
+            const windowHeight = window.innerHeight;
+            const fullHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrolled = window.scrollY;
+            const progressWidth = (scrolled / fullHeight) * 100;
+            progress.style.transform = `scaleX(${progressWidth / 100})`;
+            
+            // Save reading progress
+            if (currentChapter) {
+                localStorage.setItem(`progress_${currentStory.id}_${currentChapter.id}`, scrolled);
+            }
+        });
+    }
+
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 100);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    function loadUserPreferences() {
+        const savedFont = localStorage.getItem('preferredFont');
+        if (savedFont) {
+            document.getElementById('fontFamily').value = savedFont;
+            document.getElementById('storyContent').style.fontFamily = savedFont;
+        }
+
+        const savedFontSize = localStorage.getItem('fontSize');
+        if (savedFontSize) {
+            fontSize = parseInt(savedFontSize);
+            document.getElementById('storyContent').style.fontSize = `${fontSize}px`;
+        }
+
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
+        userHighlights = JSON.parse(localStorage.getItem(`highlights_${currentStory.id}`)) || [];
+        userNotes = JSON.parse(localStorage.getItem(`notes_${currentStory.id}`)) || [];
+
+        // Restore reading progress
+        if (currentChapter) {
+            const savedProgress = localStorage.getItem(`progress_${currentStory.id}_${currentChapter.id}`);
+            if (savedProgress) {
+                window.scrollTo(0, parseInt(savedProgress));
+            }
+        }
+    }
+</script>
+
+
+</body>
+</html>

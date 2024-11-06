@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSEWRITE - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root[data-theme="dark"] {
+            --primary: #8b95f6;
+            --primary-light: #b3c7f7;
+            --secondary: #faaf90;
+            --secondary-light: #f8b8d0;
+            --accent: #9b8bf4;
+            --bg-primary: #0a0f1f;
+            --bg-secondary: #141b2d;
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+            --gradient-accent: linear-gradient(135deg, var(--primary-light), var(--accent));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--bg-secondary);
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .user-profile {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            border: 3px solid var(--accent);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--card-bg);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stories-section {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .new-story-btn {
+            background: var(--gradient-accent);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .new-story-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .story-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .story-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .story-cover {
+            height: 150px;
+            position: relative;
+        }
+
+        .story-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .story-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            background: rgba(0,0,0,0.7);
+        }
+
+        .story-details {
+            padding: 1rem;
+        }
+
+        .story-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .story-stats {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .story-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .edit-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="user-profile">
+            <img src="" alt="Profile" id="userProfileImg" class="profile-img">
+            <h3 id="userName">Loading...</h3>
+            <p id="userEmail" style="color: var(--text-secondary)"></p>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#" class="nav-link active">
+                    <i class="fas fa-columns"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/write.html" class="nav-link">
+                    <i class="fas fa-pen"></i>
+                    Write
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/stories.html" class="nav-link">
+                    <i class="fas fa-book"></i>
+                    My Stories
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/settings.html" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalStories">0</div>
+                <div class="stat-label">Stories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalReads">0</div>
+                <div class="stat-label">Total Reads</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalLikes">0</div>
+                <div class="stat-label">Total Likes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="followers">0</div>
+                <div class="stat-label">Followers</div>
+            </div>
+        </div>
+
+        <div class="stories-section">
+            <div class="section-header">
+                <h2>My Stories</h2>
+                <button class="new-story-btn" onclick="window.location.href='/write.html'">
+                    <i class="fas fa-plus"></i> New Story
+                </button>
+            </div>
+            <div class="stories-grid" id="storiesGrid"></div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, query, where, getDocs, deleteDoc, doc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBgCsFBQxndn6jqx6BWy0nMGrNy0A7tGXQ",
+            authDomain: "musewrite-71e8c.firebaseapp.com",
+            projectId: "musewrite-71e8c",
+            storageBucket: "musewrite-71e8c.appspot.com",
+            messagingSenderId: "497700060224",
+            appId: "1:497700060224:web:6d23b3dafaa68a954b73a5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const db = getFirestore();
+
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                document.getElementById('userProfileImg').src = user.photoURL || 'https://via.placeholder.com/100';
+                document.getElementById('userName').textContent = user.displayName;
+                document.getElementById('userEmail').textContent = user.email;
+                loadUserStats(user.uid);
+                loadUserStories(user.uid);
+            } else {
+                window.location.href = '/login.html';
+            }
+        });
+
+        async function loadUserStats(userId) {
+            try {
+                const storiesQuery = query(collection(db, 'stories'), where('authorId', '==', userId));
+                const storiesSnapshot = await getDocs(storiesQuery);
+                
+                let totalReads = 0;
+                let totalLikes = 0;
+                
+                storiesSnapshot.forEach(doc => {
+                    const story = doc.data();
+                    totalReads += story.reads || 0;
+                    totalLikes += story.likes || 0;
+                });
+
+                document.getElementById('totalStories').textContent = storiesSnapshot.size;
+                document.getElementById('totalReads').textContent = formatNumber(totalReads);
+                document.getElementById('totalLikes').textContent = formatNumber(totalLikes);
+
+                const followersQuery = query(collection(db, 'followers'), where('followingId', '==', userId));
+                const followersSnapshot = await getDocs(followersQuery);
+                document.getElementById('followers').textContent = formatNumber(followersSnapshot.size);
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        async function loadUserStories(userId) {
+            try {
+                const storiesQuery = query(collection(db, 'stories'), where('authorId', '==', userId));
+                const snapshot = await getDocs(storiesQuery);
+                const storiesGrid = document.getElementById('storiesGrid');
+                storiesGrid.innerHTML = '';
+
+                snapshot.forEach(doc => {
+                    const story = doc.data();
+                    storiesGrid.innerHTML += `
+                        <div class="story-card">
+                            <div class="story-cover">
+                                <img src="${story.coverImage || 'https://via.placeholder.com/300x150'}" alt="${story.title}">
+                                <span class="story-status">${story.status}</span>
+                            </div>
+                            <div class="story-details">
+                                <h3 class="story-title">${story.title}</h3>
+                                <div class="story-stats">
+                                    <span><i class="fas fa-eye"></i> ${formatNumber(story.reads || 0)}</span>
+                                    <span><i class="fas fa-heart"></i> ${formatNumber(story.likes || 0)}</span>
+                                </div>
+                                <div class="story-actions">
+                                    <button class="action-btn edit-btn" onclick="window.location.href='/write.html?id=${doc.id}'">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="action-btn delete-btn" onclick="deleteStory('${doc.id}')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error loading stories:', error);
+            }
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            }
+            if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num;
+        }
+
+        window.deleteStory = async (storyId) => {
+    if (confirm('Are you sure you want to delete this story? This action cannot be undone.')) {
+        try {
+            await deleteDoc(doc(db, 'stories', storyId));
+            loadUserStats(auth.currentUser.uid);
+            loadUserStories(auth.currentUser.uid);
+            showToast('Story deleted successfully!', 'success');
+        } catch (error) {
+            console.error('Error deleting story:', error);
+            showToast('Error deleting story', 'error');
+        }
+    }
+};
+
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 100);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Error signing out:', error);
+            }
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSEWRITE - My Stories</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root[data-theme="dark"] {
+            --primary: #8b95f6;
+            --primary-light: #b3c7f7;
+            --secondary: #faaf90;
+            --secondary-light: #f8b8d0;
+            --accent: #9b8bf4;
+            --bg-primary: #0a0f1f;
+            --bg-secondary: #141b2d;
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+            --gradient-accent: linear-gradient(135deg, var(--primary-light), var(--accent));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .story-card {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .story-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .story-cover {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .story-content {
+            padding: 1.5rem;
+        }
+
+        .story-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .story-stats {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+
+        .story-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--gradient-accent);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--text-primary);
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border: none;
+            cursor: pointer;
+        }
+
+        .filter-btn.active {
+            background: var(--gradient-accent);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-secondary);
+        }
+
+        .create-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-accent);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .create-btn:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="brand-logo">
+                <span class="logo-text">MUSE</span>
+                <span class="logo-text-accent">WRITE</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">All Stories</button>
+            <button class="filter-btn" data-filter="published">Published</button>
+            <button class="filter-btn" data-filter="drafts">Drafts</button>
+            <button class="filter-btn" data-filter="archived">Archived</button>
+        </div>
+
+        <div class="stories-grid" id="storiesGrid"></div>
+
+        <button class="create-btn" onclick="window.location.href='/write.html'">
+            <i class="fas fa-plus"></i>
+        </button>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBgCsFBQxndn6jqx6BWy0nMGrNy0A7tGXQ",
+            authDomain: "musewrite-71e8c.firebaseapp.com",
+            projectId: "musewrite-71e8c",
+            storageBucket: "musewrite-71e8c.appspot.com",
+            messagingSenderId: "497700060224",
+            appId: "1:497700060224:web:6d23b3dafaa68a954b73a5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore();
+        const auth = getAuth();
+
+        let currentFilter = 'all';
+
+        async function loadStories() {
+            const storiesGrid = document.getElementById('storiesGrid');
+            storiesGrid.innerHTML = '';
+
+            if (!auth.currentUser) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            const storiesRef = collection(db, 'stories');
+            const q = query(storiesRef, where('authorId', '==', auth.currentUser.uid));
+            const snapshot = await getDocs(q);
+
+            if (snapshot.empty) {
+                storiesGrid.innerHTML = `
+                    <div class="empty-state">
+                        <h2>No stories yet</h2>
+                        <p>Start writing your first story!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            snapshot.forEach(doc => {
+                const story = doc.data();
+                if (currentFilter === 'all' || story.status === currentFilter) {
+                    storiesGrid.innerHTML += `
+                        <div class="story-card">
+                            <img src="${story.coverUrl || 'https://via.placeholder.com/300x200'}" alt="${story.title}" class="story-cover">
+                            <div class="story-content">
+                                <h3 class="story-title">${story.title}</h3>
+                                <div class="story-stats">
+                                    <span><i class="fas fa-eye"></i> ${story.reads || 0}</span>
+                                    <span><i class="fas fa-heart"></i> ${story.likes || 0}</span>
+                                    <span><i class="fas fa-comment"></i> ${story.comments || 0}</span>
+                                </div>
+                                <div class="story-actions">
+                                    <button class="btn btn-primary" onclick="window.location.href='/write.html?id=${doc.id}'">Edit</button>
+                                    <button class="btn btn-secondary" onclick="window.location.href='/read.html?id=${doc.id}'">View</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelector('.filter-btn.active').classList.remove('active');
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                loadStories();
+            });
+        });
+
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                loadStories();
+            } else {
+                window.location.href = '/login.html';
+            }
+        });
+    </script>
+</body>
+</html>
